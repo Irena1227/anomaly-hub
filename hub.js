@@ -77,19 +77,31 @@ const WALLPAPERS = {
 // ─────────────────────────────────────────────────────────────
 // Favicon helper — fabricates a glyph tile if no favicon URL
 // ─────────────────────────────────────────────────────────────
+function getFaviconUrl(link) {
+  if (link.favicon) return link.favicon;
+  if (link.href && link.href.startsWith('http')) {
+    try {
+      const domain = new URL(link.href).hostname;
+      return 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=128';
+    } catch(e) {}
+  }
+  return null;
+}
+
 function FaviconTile({ link, size = 46 }) {
-  if (link.favicon) {
+  const faviconUrl = getFaviconUrl(link);
+  if (faviconUrl) {
     return (
       <div style={{
         width: size, height: size, borderRadius: 12,
-        background: '#fff',
+        background: link.tint || '#fff',
         border: '0.5px solid rgba(0,0,0,0.06)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(0,0,0,0.03)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden', flexShrink: 0,
       }}>
-        <img src={link.favicon} alt="" style={{ width: size*0.62, height: size*0.62, objectFit: 'contain' }}
-             onError={(e)=>{e.target.style.display='none'}}/>
+        <img src={faviconUrl} alt="" style={{ width: size*0.62, height: size*0.62, objectFit: 'contain' }}
+             onError={(e)=>{e.target.parentElement.innerHTML='<span style="font-size:'+size*0.44+'px;font-weight:600;color:'+(link.iconColor||'#4B5563')+'">'+(link.glyph||(link.title||'?')[0])+'</span>';}}/>
       </div>
     );
   }
