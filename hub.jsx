@@ -926,42 +926,11 @@ function App() {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '40px 20px',
-      background: `
-        radial-gradient(1200px 700px at 20% 0%, #E9EEF8 0%, rgba(233,238,248,0) 60%),
-        radial-gradient(1000px 600px at 90% 100%, #F2EAF2 0%, rgba(242,234,242,0) 60%),
-        linear-gradient(180deg, #EEEEF1 0%, #E5E5E9 100%)`,
+      position: 'fixed', inset: 0, overflow: 'auto',
+      WebkitOverflowScrolling: 'touch',
     }}>
-      <div style={{
-        position: 'fixed', top: 28, left: 28,
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: 10, letterSpacing: 1.5, color: 'rgba(0,0,0,0.35)',
-        textTransform: 'uppercase',
-      }}>
-        Anomaly Gate · Mobile · v1.1
-      </div>
-      <div style={{
-        position: 'fixed', top: 28, right: 28,
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: 10, letterSpacing: 1.5, color: 'rgba(0,0,0,0.35)',
-        textTransform: 'uppercase',
-        display: 'flex', alignItems: 'center', gap: 6,
-      }}>
-        <span style={{
-          width: 6, height: 6, borderRadius: 3, background: '#47C16E',
-          boxShadow: '0 0 6px rgba(71,193,110,0.5)',
-        }}/>
-        Live Preview
-      </div>
-
-      <div style={{position:"fixed",inset:0,overflow:"auto"}}>
-        <HubScreen tweaks={tweaks} onCardClick={handleCard}/>
-      </div>
-
+      <HubScreen tweaks={tweaks} onCardClick={handleCard}/>
       <Toast msg={toast.msg} visible={toast.visible}/>
-      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksOpen}/>
     </div>
   );
 }
