@@ -1,0 +1,965 @@
+// Anomaly Gate — 偏差之门
+// iOS-style mobile-first personal navigation console
+
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "accent": "#5B8DEF",
+  "wallpaper": "mist",
+  "cardStyle": "glass"
+}/*EDITMODE-END*/;
+
+// ─────────────────────────────────────────────────────────────
+// Default data — categories + links
+// ─────────────────────────────────────────────────────────────
+const DEFAULT_CATEGORIES = [
+  {
+    id: 'anomaly',
+    title: '偏差链',
+    subtitle: 'Anomaly',
+    accent: '#4A6FDC',
+    links: [
+      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '封存偏差链的每一帧', href: 'https://anomaly-gallery.zeabur.app', favicon: null, tint: '#E8EEFB', iconColor: '#4A6FDC', glyph: 'G' },
+      { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '跨越版本的共生记忆', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', favicon: null, tint: '#F0EBF8', iconColor: '#7A5BB5', glyph: 'M' },
+      { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '时间轴上的每一天', href: 'https://irena1227.github.io/Deviation-diary/', favicon: null, tint: '#EAF3EE', iconColor: '#3E8A6B', glyph: 'J' },
+    ],
+  },
+  {
+    id: 'romanring',
+    title: '如慕令',
+    subtitle: 'RomanRing',
+    accent: '#4B5563',
+    links: [
+      { id: 'command', title: '如慕令作战指挥中心', subtitle: 'Command Center', desc: '每日数据 · 趋势追踪', href: 'https://rumuling-dashboard.zeabur.app', favicon: null, tint: '#EDEEF2', iconColor: '#4B5563', glyph: 'C' },
+    ],
+  },
+  {
+    id: 'tools',
+    title: '工具箱',
+    subtitle: 'Tools',
+    accent: '#2F6D8F',
+    links: [],
+  },
+  {
+    id: 'games',
+    title: '小游戏',
+    subtitle: 'Games',
+    accent: '#C66A3C',
+    links: [
+      { id: 'feast', title: '地狱火烤串宴席', subtitle: 'Hellfire Feast', desc: 'Cask #006 · 三人烤架', href: 'https://anomaly-gallery.zeabur.app', favicon: null, tint: '#FBEEE8', iconColor: '#C66A3C', glyph: 'F' },
+    ],
+  },
+];
+
+const WALLPAPERS = {
+  mist: `
+    radial-gradient(1100px 600px at 12% -10%, #EEF2FB 0%, rgba(238,242,251,0) 55%),
+    radial-gradient(900px 500px at 110% 20%, #F6EEF5 0%, rgba(246,238,245,0) 55%),
+    radial-gradient(800px 700px at 40% 120%, #EFF4EF 0%, rgba(239,244,239,0) 50%),
+    linear-gradient(180deg, #F7F7F9 0%, #ECECEE 100%)`,
+  paper: 'linear-gradient(180deg, #FAFAFA 0%, #F0F0F2 100%)',
+  dawn: `
+    radial-gradient(900px 500px at 0% 0%, #FBEFE8 0%, rgba(251,239,232,0) 60%),
+    radial-gradient(800px 600px at 100% 100%, #E8EFFB 0%, rgba(232,239,251,0) 60%),
+    linear-gradient(180deg, #FAF6F2 0%, #F2F0F4 100%)`,
+  sage: `
+    radial-gradient(900px 600px at 50% -10%, #E9F1EA 0%, rgba(233,241,234,0) 60%),
+    linear-gradient(180deg, #F4F6F3 0%, #EDECEB 100%)`,
+};
+
+// ─────────────────────────────────────────────────────────────
+// Favicon helper — fabricates a glyph tile if no favicon URL
+// ─────────────────────────────────────────────────────────────
+function FaviconTile({ link, size = 46 }) {
+  if (link.favicon) {
+    return (
+      <div style={{
+        width: size, height: size, borderRadius: 12,
+        background: '#fff',
+        border: '0.5px solid rgba(0,0,0,0.06)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(0,0,0,0.03)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden', flexShrink: 0,
+      }}>
+        <img src={link.favicon} alt="" style={{ width: size*0.62, height: size*0.62, objectFit: 'contain' }}
+             onError={(e)=>{e.target.style.display='none'}}/>
+      </div>
+    );
+  }
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: 12,
+      background: link.tint || '#EEF0F4',
+      border: '0.5px solid rgba(0,0,0,0.04)',
+      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(0,0,0,0.03)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      flexShrink: 0,
+      fontFamily: '"Inter", -apple-system, sans-serif',
+      fontSize: size*0.44, fontWeight: 600, letterSpacing: -0.5,
+      color: link.iconColor || '#4B5563',
+    }}>
+      {link.glyph || (link.title || '?')[0]}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// LinkRow — card with swipe-to-delete in edit mode
+// ─────────────────────────────────────────────────────────────
+function LinkRow({ link, cardStyle, editMode, dragging, onClick, onDelete, onDragStart, onDragOver, onDrop }) {
+  const [pressed, setPressed] = React.useState(false);
+  const [swipeX, setSwipeX] = React.useState(0); // negative when swiped
+  const startX = React.useRef(null);
+  const moved = React.useRef(false);
+  const glass = cardStyle === 'glass';
+
+  const MAX_SWIPE = -84;
+
+  const handlePointerDown = (e) => {
+    if (editMode) {
+      startX.current = e.clientX;
+      moved.current = false;
+    }
+    setPressed(true);
+  };
+  const handlePointerMove = (e) => {
+    if (!editMode || startX.current == null) return;
+    const dx = e.clientX - startX.current;
+    if (Math.abs(dx) > 3) moved.current = true;
+    if (dx < 0) setSwipeX(Math.max(dx, MAX_SWIPE - 20));
+    else setSwipeX(Math.min(dx * 0.2, 0));
+  };
+  const handlePointerUp = () => {
+    setPressed(false);
+    if (editMode && startX.current != null) {
+      if (swipeX < MAX_SWIPE / 2) setSwipeX(MAX_SWIPE);
+      else setSwipeX(0);
+      startX.current = null;
+    }
+  };
+  const handleClick = (e) => {
+    if (editMode) { e.preventDefault(); return; }
+    if (!editMode && onClick) onClick(e);
+  };
+
+  return (
+    <div
+      style={{ position: 'relative', marginBottom: 10 }}
+      draggable={editMode}
+      onDragStart={(e) => { onDragStart?.(e); }}
+      onDragOver={(e) => { e.preventDefault(); onDragOver?.(e); }}
+      onDrop={(e) => { e.preventDefault(); onDrop?.(e); }}
+    >
+      {/* Delete action revealed behind */}
+      {editMode && (
+        <div style={{
+          position: 'absolute', top: 0, right: 0, bottom: 0,
+          width: Math.abs(Math.min(swipeX, 0)) + 4,
+          display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+          paddingRight: 10,
+        }}>
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete?.(); }}
+            style={{
+              height: '100%', minWidth: 72, borderRadius: 18,
+              background: '#FF3B30', color: '#fff', border: 'none',
+              fontSize: 14, fontWeight: 500, letterSpacing: -0.2,
+              cursor: 'pointer', fontFamily: 'inherit',
+              boxShadow: '0 2px 8px rgba(255,59,48,0.3)',
+            }}>删除</button>
+        </div>
+      )}
+
+      <a
+        href={link.href || '#'}
+        onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={() => setPressed(false)}
+        style={{
+          display: 'block', textDecoration: 'none', color: 'inherit',
+          transform: `translateX(${swipeX}px) scale(${pressed && !editMode ? 0.985 : (dragging ? 1.02 : 1)})`,
+          transition: startX.current != null ? 'none' : 'transform 220ms cubic-bezier(0.25,0.8,0.35,1)',
+          opacity: dragging ? 0.75 : 1,
+          touchAction: editMode ? 'pan-y' : 'auto',
+        }}
+      >
+        <div style={{
+          position: 'relative',
+          padding: '14px 16px',
+          borderRadius: 18,
+          background: glass ? 'rgba(255,255,255,0.68)' : '#FFFFFF',
+          backdropFilter: glass ? 'blur(30px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: glass ? 'blur(30px) saturate(180%)' : 'none',
+          border: '0.5px solid rgba(0,0,0,0.06)',
+          boxShadow: pressed
+            ? '0 1px 1px rgba(20,25,45,0.02), 0 1px 3px rgba(20,25,45,0.03)'
+            : '0 0.5px 1px rgba(20,25,45,0.02), 0 1px 2px rgba(20,25,45,0.025), 0 6px 14px rgba(20,25,45,0.03), 0 14px 30px rgba(20,25,45,0.025)',
+        }}>
+          {glass && <div style={{
+            position: 'absolute', inset: 0, borderRadius: 18, pointerEvents: 'none',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)',
+          }}/>}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
+            {editMode && (
+              <div style={{
+                flexShrink: 0, color: 'rgba(60,60,67,0.35)',
+                cursor: 'grab', padding: 2,
+              }}>
+                <svg width="14" height="18" viewBox="0 0 14 18" fill="currentColor">
+                  <circle cx="4" cy="3" r="1.4"/><circle cx="10" cy="3" r="1.4"/>
+                  <circle cx="4" cy="9" r="1.4"/><circle cx="10" cy="9" r="1.4"/>
+                  <circle cx="4" cy="15" r="1.4"/><circle cx="10" cy="15" r="1.4"/>
+                </svg>
+              </div>
+            )}
+            <FaviconTile link={link}/>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontSize: 16, fontWeight: 600, letterSpacing: -0.3,
+                color: '#0A0A0B', lineHeight: 1.3,
+                wordBreak: 'break-word',
+              }}>{link.title}</div>
+            </div>
+            {!editMode && (
+              <svg width="7" height="12" viewBox="0 0 7 12" style={{ flexShrink: 0 }}>
+                <path d="M1 1l5 5-5 5" stroke="rgba(60,60,67,0.28)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
+          </div>
+        </div>
+      </a>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Category section — collapsible header
+// ─────────────────────────────────────────────────────────────
+function CategorySection({
+  cat, collapsed, onToggle, cardStyle, editMode,
+  onDeleteLink, onDeleteCategory,
+  onCardClick,
+  dragState, setDragState,
+  onReorderLink, onReorderCategory,
+}) {
+  const count = cat.links.length;
+
+  const handleLinkDragStart = (linkIdx) => (e) => {
+    setDragState({ kind: 'link', catId: cat.id, fromIdx: linkIdx });
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  const handleLinkDrop = (toIdx) => () => {
+    if (dragState?.kind === 'link' && dragState.catId === cat.id) {
+      onReorderLink(cat.id, dragState.fromIdx, toIdx);
+    }
+    setDragState(null);
+  };
+
+  return (
+    <div style={{ marginBottom: 18 }}
+         draggable={editMode}
+         onDragStart={(e) => { if (editMode) { setDragState({ kind: 'category', fromId: cat.id }); e.stopPropagation(); } }}
+         onDragOver={(e) => { if (editMode && dragState?.kind === 'category') e.preventDefault(); }}
+         onDrop={(e) => { if (editMode && dragState?.kind === 'category') { e.preventDefault(); onReorderCategory(dragState.fromId, cat.id); setDragState(null); } }}
+    >
+      {/* Header — clickable to toggle */}
+      <button
+        onClick={onToggle}
+        style={{
+          width: '100%', background: 'transparent', border: 'none',
+          padding: '8px 6px 10px', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          fontFamily: 'inherit', textAlign: 'left',
+          borderBottom: '0.5px solid rgba(60,60,67,0.12)',
+          marginBottom: 12,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1, flexWrap: 'nowrap' }}>
+          {editMode && (
+            <svg width="14" height="18" viewBox="0 0 14 18" fill="rgba(60,60,67,0.35)" style={{ flexShrink: 0 }}>
+              <circle cx="4" cy="3" r="1.4"/><circle cx="10" cy="3" r="1.4"/>
+              <circle cx="4" cy="9" r="1.4"/><circle cx="10" cy="9" r="1.4"/>
+              <circle cx="4" cy="15" r="1.4"/><circle cx="10" cy="15" r="1.4"/>
+            </svg>
+          )}
+          <span style={{
+            width: 5, height: 5, borderRadius: 3, flexShrink: 0,
+            background: cat.accent,
+            boxShadow: `0 0 6px ${cat.accent}60`,
+          }}/>
+          <span style={{
+            fontSize: 13, fontWeight: 600, letterSpacing: -0.2,
+            color: '#0A0A0B',
+            whiteSpace: 'nowrap', flexShrink: 0,
+          }}>{cat.title}</span>
+          <span style={{
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 10, fontWeight: 500, letterSpacing: 1.2,
+            color: 'rgba(60,60,67,0.45)', textTransform: 'uppercase',
+            whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0,
+            overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>· {cat.subtitle}</span>
+          <span style={{
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 10, fontWeight: 500,
+            color: 'rgba(60,60,67,0.35)',
+            marginLeft: 'auto', flexShrink: 0,
+            whiteSpace: 'nowrap',
+          }}>{String(count).padStart(2,'0')}</span>
+        </div>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+        }}>
+          <svg width="11" height="11" viewBox="0 0 11 11"
+            style={{
+              transform: collapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+              transition: 'transform 220ms cubic-bezier(0.25,0.8,0.35,1)',
+              color: 'rgba(60,60,67,0.5)',
+            }}>
+            <path d="M1.5 3.5L5.5 7.5L9.5 3.5" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </button>
+
+      {/* Links */}
+      <div style={{
+        maxHeight: collapsed ? 0 : 2000,
+        overflow: 'hidden',
+        transition: 'max-height 320ms cubic-bezier(0.25,0.8,0.35,1), opacity 200ms',
+        opacity: collapsed ? 0 : 1,
+      }}>
+        {count === 0 ? (
+          <div style={{
+            padding: '16px 18px',
+            borderRadius: 14,
+            background: 'rgba(255,255,255,0.5)',
+            border: '1px dashed rgba(60,60,67,0.2)',
+            fontSize: 12, color: 'rgba(60,60,67,0.5)',
+            textAlign: 'center',
+            fontFamily: '"JetBrains Mono", monospace',
+            letterSpacing: 0.5,
+          }}>EMPTY · 点击右上 + 添加</div>
+        ) : cat.links.map((link, i) => (
+          <LinkRow
+            key={link.id}
+            link={link}
+            cardStyle={cardStyle}
+            editMode={editMode}
+            dragging={dragState?.kind === 'link' && dragState.catId === cat.id && dragState.fromIdx === i}
+            onClick={(e) => { e.preventDefault(); onCardClick(link); }}
+            onDelete={() => onDeleteLink(cat.id, link.id)}
+            onDragStart={handleLinkDragStart(i)}
+            onDragOver={() => {}}
+            onDrop={handleLinkDrop(i)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Add link modal — centered
+// ─────────────────────────────────────────────────────────────
+function AddSheet({ open, onClose, onAdd, onAddCategory, categories }) {
+  const [url, setUrl] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [subtitle, setSubtitle] = React.useState('');
+  const [catId, setCatId] = React.useState(categories[0]?.id);
+  const [faviconUrl, setFaviconUrl] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [customMode, setCustomMode] = React.useState(false);
+  const [newCatTitle, setNewCatTitle] = React.useState('');
+  const [newCatSub, setNewCatSub] = React.useState('');
+
+  React.useEffect(() => {
+    if (!open) {
+      setUrl(''); setName(''); setSubtitle(''); setFaviconUrl(null);
+      setCatId(categories[0]?.id);
+      setCustomMode(false); setNewCatTitle(''); setNewCatSub('');
+    }
+  }, [open]);
+
+  React.useEffect(() => {
+    if (!url) { setFaviconUrl(null); return; }
+    const m = url.match(/^https?:\/\/([^\/]+)/i) || url.match(/^([^\/\s]+\.[^\/\s]+)/);
+    if (m) {
+      const host = m[1].replace(/^www\./, '');
+      if (!name) {
+        const hostName = host.split('.')[0];
+        setName(hostName.charAt(0).toUpperCase() + hostName.slice(1));
+      }
+      if (!subtitle) setSubtitle(host);
+      setFaviconUrl(`https://www.google.com/s2/favicons?domain=${host}&sz=64`);
+    }
+  }, [url]);
+
+  if (!open) return null;
+
+  const handleSubmit = () => {
+    if (!url || !name) return;
+    if (customMode && !newCatTitle) return;
+    setLoading(true);
+    let targetCatId = catId;
+    if (customMode) {
+      const accents = ['#4A6FDC','#7A5BB5','#3E8A6B','#C66A3C','#D4A52C','#2F6D8F'];
+      const newCat = {
+        id: 'c_' + Date.now(),
+        title: newCatTitle,
+        subtitle: newCatSub || 'Custom',
+        accent: accents[categories.length % accents.length],
+        links: [],
+      };
+      onAddCategory(newCat);
+      targetCatId = newCat.id;
+    }
+    const newLink = {
+      id: 'l_' + Date.now(),
+      title: name,
+      subtitle: subtitle || url,
+      desc: '',
+      href: url.startsWith('http') ? url : 'https://' + url,
+      favicon: faviconUrl,
+      tint: '#F0F2F6',
+      iconColor: '#4B5563',
+      glyph: name[0],
+    };
+    setTimeout(() => { onAdd(targetCatId, newLink); setLoading(false); onClose(); }, 180);
+  };
+
+  const canSave = url && name && (!customMode || newCatTitle);
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 200,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '12px',
+      background: 'rgba(20,22,28,0.35)',
+      backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
+      animation: 'fadeIn 200ms ease-out',
+    }} onClick={onClose}>
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.94) translateY(8px) } to { opacity: 1; transform: scale(1) translateY(0) } }
+      `}</style>
+      <div onClick={(e) => e.stopPropagation()} style={{
+        width: '100%', maxWidth: 340, maxHeight: '90%',
+        background: 'rgba(250,250,252,0.94)',
+        backdropFilter: 'blur(30px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+        border: '0.5px solid rgba(0,0,0,0.06)',
+        borderRadius: 22,
+        padding: '14px 16px 18px',
+        overflow: 'auto',
+        boxShadow: '0 30px 80px rgba(10,15,30,0.25), 0 10px 30px rgba(10,15,30,0.12)',
+        animation: 'popIn 260ms cubic-bezier(0.25,0.8,0.35,1)',
+      }}>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginBottom: 12, gap: 8,
+        }}>
+          <button onClick={onClose} style={{
+            border: 'none', background: 'transparent', padding: 0,
+            fontSize: 14, color: '#5B8DEF', cursor: 'pointer', fontFamily: 'inherit',
+            whiteSpace: 'nowrap', flexShrink: 0,
+          }}>取消</button>
+          <div style={{
+            fontSize: 14, fontWeight: 600, letterSpacing: -0.3,
+            whiteSpace: 'nowrap', flexShrink: 0,
+          }}>新增链接</div>
+          <button onClick={handleSubmit} disabled={!canSave || loading} style={{
+            border: 'none', background: 'transparent', padding: 0,
+            fontSize: 14, fontWeight: 600,
+            color: !canSave ? 'rgba(60,60,67,0.3)' : '#5B8DEF',
+            cursor: !canSave ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
+            whiteSpace: 'nowrap', flexShrink: 0,
+          }}>{loading ? '...' : '保存'}</button>
+        </div>
+
+        {/* Preview chip */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: 10, borderRadius: 12,
+          background: '#fff',
+          border: '0.5px solid rgba(0,0,0,0.06)',
+          marginBottom: 12,
+        }}>
+          <FaviconTile link={{ favicon: faviconUrl, glyph: (name||'?')[0], tint: '#EEF0F4', iconColor: '#4B5563' }} size={36}/>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontSize: 13, fontWeight: 600,
+              color: name ? '#0A0A0B' : 'rgba(60,60,67,0.4)',
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>{name || '网站名称'}</div>
+            <div style={{
+              fontFamily: '"JetBrains Mono", monospace', fontSize: 9.5,
+              color: 'rgba(60,60,67,0.5)', letterSpacing: 0.4,
+              textTransform: 'lowercase', marginTop: 1,
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>{subtitle || url || 'example.com'}</div>
+          </div>
+        </div>
+
+        <Field label="网址">
+          <input value={url} onChange={e=>setUrl(e.target.value)} placeholder="https://example.com"
+                 style={inputStyle} autoFocus/>
+        </Field>
+        <Field label="名称" note={url ? '已自动识别，可修改' : ''}>
+          <input value={name} onChange={e=>setName(e.target.value)} placeholder="网站名称" style={inputStyle}/>
+        </Field>
+        <Field label="分类">
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', padding: '2px 0' }}>
+            {categories.map(c => (
+              <button key={c.id} onClick={()=>{ setCatId(c.id); setCustomMode(false); }} style={{
+                padding: '6px 11px', borderRadius: 999, border: 'none', cursor: 'pointer',
+                fontSize: 12, fontWeight: 500, letterSpacing: -0.1,
+                background: (!customMode && catId === c.id) ? '#0A0A0B' : 'rgba(0,0,0,0.05)',
+                color: (!customMode && catId === c.id) ? '#fff' : '#0A0A0B',
+                fontFamily: 'inherit',
+                whiteSpace: 'nowrap', flexShrink: 0,
+              }}>{c.title}</button>
+            ))}
+            <button onClick={()=>setCustomMode(true)} style={{
+              padding: '6px 11px', borderRadius: 999, cursor: 'pointer',
+              fontSize: 12, fontWeight: 500, letterSpacing: -0.1,
+              background: customMode ? '#0A0A0B' : 'transparent',
+              color: customMode ? '#fff' : '#5B8DEF',
+              border: customMode ? 'none' : '1px dashed rgba(91,141,239,0.5)',
+              fontFamily: 'inherit',
+              whiteSpace: 'nowrap', flexShrink: 0,
+            }}>+ 自定义</button>
+          </div>
+        </Field>
+        {customMode && (
+          <div style={{
+            padding: 12, borderRadius: 12,
+            background: 'rgba(91,141,239,0.06)',
+            border: '0.5px solid rgba(91,141,239,0.2)',
+            marginTop: -6, marginBottom: 4,
+          }}>
+            <Field label="新分类名称">
+              <input value={newCatTitle} onChange={e=>setNewCatTitle(e.target.value)} placeholder="例如：阅读" style={inputStyle}/>
+            </Field>
+            <div style={{ marginBottom: 0 }}>
+              <Field label="英文副标 (可选)">
+                <input value={newCatSub} onChange={e=>setNewCatSub(e.target.value)} placeholder="Reading" style={inputStyle}/>
+              </Field>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const inputStyle = {
+  width: '100%', padding: '12px 14px', borderRadius: 12,
+  border: '0.5px solid rgba(0,0,0,0.1)',
+  background: '#fff', fontSize: 15,
+  fontFamily: 'inherit', color: '#0A0A0B',
+  outline: 'none', boxSizing: 'border-box',
+};
+
+function Field({ label, note, children }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+        fontSize: 12, color: 'rgba(60,60,67,0.6)', marginBottom: 6,
+        fontFamily: '"JetBrains Mono", monospace', letterSpacing: 0.8, textTransform: 'uppercase',
+      }}>
+        <span>{label}</span>
+        {note && <span style={{ textTransform: 'none', letterSpacing: 0, fontFamily: 'inherit', color: 'rgba(60,60,67,0.45)' }}>{note}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Floating buttons in header
+// ─────────────────────────────────────────────────────────────
+function GlassButton({ onClick, active, children, title }) {
+  return (
+    <button title={title} onClick={onClick} style={{
+      width: 36, height: 36, borderRadius: 18, padding: 0,
+      border: '0.5px solid rgba(0,0,0,0.06)',
+      background: active ? '#0A0A0B' : 'rgba(255,255,255,0.72)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+      color: active ? '#fff' : '#0A0A0B',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.04)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      cursor: 'pointer', transition: 'all 180ms',
+    }}>{children}</button>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Hub screen
+// ─────────────────────────────────────────────────────────────
+function HubScreen({ tweaks, onCardClick }) {
+  const [categories, setCategories] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('anomaly-gate-categories');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return DEFAULT_CATEGORIES;
+  });
+  const [collapsed, setCollapsed] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem('anomaly-gate-collapsed') || '{}'); } catch { return {}; }
+  });
+  const [editMode, setEditMode] = React.useState(false);
+  const [addOpen, setAddOpen] = React.useState(false);
+  const [dragState, setDragState] = React.useState(null);
+
+  React.useEffect(() => {
+    try { localStorage.setItem('anomaly-gate-categories', JSON.stringify(categories)); } catch {}
+  }, [categories]);
+  React.useEffect(() => {
+    try { localStorage.setItem('anomaly-gate-collapsed', JSON.stringify(collapsed)); } catch {}
+  }, [collapsed]);
+
+  const toggle = (id) => setCollapsed(c => ({ ...c, [id]: !c[id] }));
+  const collapseAll = () => {
+    const all = {};
+    const anyOpen = categories.some(c => !collapsed[c.id]);
+    categories.forEach(c => all[c.id] = anyOpen);
+    setCollapsed(all);
+  };
+
+  const deleteLink = (catId, linkId) => {
+    setCategories(cs => cs.map(c => c.id === catId
+      ? { ...c, links: c.links.filter(l => l.id !== linkId) }
+      : c));
+  };
+
+  const addLink = (catId, link) => {
+    setCategories(cs => cs.map(c => c.id === catId
+      ? { ...c, links: [...c.links, link] }
+      : c));
+    setCollapsed(col => ({ ...col, [catId]: false }));
+  };
+
+  const addCategory = (newCat) => {
+    setCategories(cs => [...cs, newCat]);
+  };
+
+  const reorderLink = (catId, fromIdx, toIdx) => {
+    if (fromIdx === toIdx) return;
+    setCategories(cs => cs.map(c => {
+      if (c.id !== catId) return c;
+      const next = [...c.links];
+      const [m] = next.splice(fromIdx, 1);
+      next.splice(toIdx, 0, m);
+      return { ...c, links: next };
+    }));
+  };
+
+  const reorderCategory = (fromId, toId) => {
+    if (fromId === toId) return;
+    setCategories(cs => {
+      const next = [...cs];
+      const fromIdx = next.findIndex(c => c.id === fromId);
+      const toIdx = next.findIndex(c => c.id === toId);
+      if (fromIdx < 0 || toIdx < 0) return cs;
+      const [m] = next.splice(fromIdx, 1);
+      next.splice(toIdx, 0, m);
+      return next;
+    });
+  };
+
+  return (
+    <div style={{
+      position: 'relative',
+      minHeight: '100%',
+      background: WALLPAPERS[tweaks.wallpaper] || WALLPAPERS.mist,
+      paddingBottom: 48,
+    }}>
+      {/* Top overlay action buttons (absolute over status bar area) */}
+      <div style={{
+        position: 'absolute', top: 58, left: 0, right: 0, zIndex: 30,
+        display: 'flex', justifyContent: 'space-between',
+        padding: '0 18px',
+      }}>
+        <GlassButton onClick={() => setEditMode(e => !e)} active={editMode} title="编辑 / 排序">
+          {editMode ? (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 14l1-4 7-7 3 3-7 7-4 1z M9 4l3 3" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </GlassButton>
+        <GlassButton onClick={() => setAddOpen(true)} title="新增链接">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        </GlassButton>
+      </div>
+
+      {/* Header — title on the left + collapse-all on the right */}
+      <div style={{
+        padding: '108px 22px 14px',
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12,
+      }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{
+            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+            fontSize: 10, fontWeight: 500, letterSpacing: 1.4,
+            color: 'rgba(60,60,67,0.5)', textTransform: 'uppercase',
+            marginBottom: 6,
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <span style={{
+              width: 5, height: 5, borderRadius: 3,
+              background: tweaks.accent,
+              boxShadow: `0 0 8px ${tweaks.accent}80`,
+            }}/>
+            {editMode ? 'EDIT · DRAG / SWIPE ←' : 'CONSOLE · ALL GATES'}
+          </div>
+          <div style={{
+            fontSize: 28, fontWeight: 700, letterSpacing: -0.8,
+            lineHeight: 1.1, color: '#0A0A0B',
+            display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'nowrap',
+          }}>
+            Anomaly
+            <span style={{
+              color: tweaks.accent,
+              fontStyle: 'italic',
+              fontFamily: '"Noto Serif SC", "SF Pro Display", serif',
+              fontWeight: 500,
+              letterSpacing: -0.5,
+            }}>Gate</span>
+          </div>
+        </div>
+        <button onClick={collapseAll} style={{
+          border: 'none', background: 'transparent', cursor: 'pointer',
+          fontFamily: '"JetBrains Mono", monospace', fontSize: 10,
+          color: 'rgba(60,60,67,0.5)', letterSpacing: 1, textTransform: 'uppercase',
+          padding: '4px 0', whiteSpace: 'nowrap', flexShrink: 0,
+          display: 'flex', alignItems: 'center', gap: 5,
+        }}>
+          <svg width="9" height="9" viewBox="0 0 9 9" style={{
+            transform: categories.some(c => !collapsed[c.id]) ? 'rotate(0deg)' : 'rotate(-90deg)',
+            transition: 'transform 200ms',
+          }}>
+            <path d="M1.5 3L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          {categories.some(c => !collapsed[c.id]) ? '全部折叠' : '全部展开'}
+        </button>
+      </div>
+
+      {/* Categories */}
+      <div style={{ padding: '0 18px 0' }}>
+        {categories.map(cat => (
+          <CategorySection
+            key={cat.id}
+            cat={cat}
+            collapsed={!!collapsed[cat.id]}
+            onToggle={() => toggle(cat.id)}
+            cardStyle={tweaks.cardStyle}
+            editMode={editMode}
+            onDeleteLink={deleteLink}
+            onCardClick={onCardClick}
+            dragState={dragState}
+            setDragState={setDragState}
+            onReorderLink={reorderLink}
+            onReorderCategory={reorderCategory}
+          />
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        marginTop: 18, padding: '0 22px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+        fontSize: 10, color: 'rgba(60,60,67,0.35)',
+        letterSpacing: 1,
+      }}>
+        <span>v1.1 · LOCAL</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{
+            width: 5, height: 5, borderRadius: 3, background: '#47C16E',
+            boxShadow: '0 0 6px rgba(71,193,110,0.5)',
+          }}/>
+          OPERATIONAL
+        </span>
+      </div>
+
+      {/* Add sheet */}
+      <AddSheet open={addOpen} onClose={() => setAddOpen(false)} onAdd={addLink} onAddCategory={addCategory} categories={categories}/>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Toast
+// ─────────────────────────────────────────────────────────────
+function Toast({ msg, visible }) {
+  return (
+    <div style={{
+      position: 'fixed', bottom: 60, left: '50%',
+      transform: `translateX(-50%) translateY(${visible ? 0 : 12}px)`,
+      opacity: visible ? 1 : 0, transition: 'all 220ms cubic-bezier(0.25,0.8,0.35,1)',
+      background: 'rgba(20,20,22,0.88)', color: '#fff',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+      padding: '10px 18px', borderRadius: 999,
+      fontSize: 13, fontWeight: 500, letterSpacing: -0.1,
+      boxShadow: '0 10px 40px rgba(0,0,0,0.25)',
+      pointerEvents: 'none', zIndex: 100,
+      maxWidth: '78%',
+    }}>{msg}</div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Tweaks panel
+// ─────────────────────────────────────────────────────────────
+function TweaksPanel({ tweaks, setTweaks, visible }) {
+  if (!visible) return null;
+  const update = (k, v) => {
+    setTweaks(t => ({ ...t, [k]: v }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [k]: v } }, '*');
+  };
+
+  const Swatch = ({ v, label }) => (
+    <button onClick={() => update('accent', v)} style={{
+      padding: 0, margin: 0, border: 'none',
+      width: 32, height: 32, borderRadius: 16,
+      background: v, cursor: 'pointer',
+      boxShadow: tweaks.accent === v
+        ? `0 0 0 2px #fff, 0 0 0 4px ${v}`
+        : '0 1px 3px rgba(0,0,0,0.15)',
+    }} title={label}/>
+  );
+  const Chip = ({ v, field, label }) => (
+    <button onClick={() => update(field, v)} style={{
+      padding: '7px 12px', borderRadius: 999, border: 'none', cursor: 'pointer',
+      fontSize: 12, fontWeight: 500, letterSpacing: -0.1,
+      background: tweaks[field] === v ? '#0A0A0B' : 'rgba(0,0,0,0.06)',
+      color: tweaks[field] === v ? '#fff' : '#0A0A0B',
+      fontFamily: 'inherit',
+    }}>{label}</button>
+  );
+
+  return (
+    <div style={{
+      position: 'fixed', bottom: 24, right: 24, zIndex: 1000,
+      width: 280, padding: 18, borderRadius: 22,
+      background: 'rgba(255,255,255,0.88)',
+      backdropFilter: 'blur(40px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+      border: '0.5px solid rgba(0,0,0,0.08)',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+    }}>
+      <div style={{
+        fontSize: 11, fontWeight: 600, letterSpacing: 1.2,
+        textTransform: 'uppercase', color: 'rgba(0,0,0,0.5)',
+        fontFamily: '"JetBrains Mono", monospace',
+        marginBottom: 14,
+      }}>Tweaks</div>
+
+      <div style={{ marginBottom: 14 }}>
+        <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.6)', marginBottom: 8 }}>Accent</div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <Swatch v="#5B8DEF" label="Cobalt"/>
+          <Swatch v="#8B5EC9" label="Orchid"/>
+          <Swatch v="#E28A5F" label="Terracotta"/>
+          <Swatch v="#4F9A7A" label="Sage"/>
+          <Swatch v="#0A0A0B" label="Ink"/>
+        </div>
+      </div>
+      <div style={{ marginBottom: 14 }}>
+        <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.6)', marginBottom: 8 }}>Wallpaper</div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <Chip v="mist" field="wallpaper" label="Mist"/>
+          <Chip v="paper" field="wallpaper" label="Paper"/>
+          <Chip v="dawn" field="wallpaper" label="Dawn"/>
+          <Chip v="sage" field="wallpaper" label="Sage"/>
+        </div>
+      </div>
+      <div>
+        <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.6)', marginBottom: 8 }}>Card Style</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <Chip v="glass" field="cardStyle" label="Glass"/>
+          <Chip v="solid" field="cardStyle" label="Solid"/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// App
+// ─────────────────────────────────────────────────────────────
+function App() {
+  const [tweaks, setTweaks] = React.useState(TWEAKS);
+  const [tweaksOpen, setTweaksOpen] = React.useState(false);
+  const [toast, setToast] = React.useState({ msg: '', visible: false });
+  const toastT = React.useRef(null);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const handleCard = (link) => {
+    setToast({ msg: `→ ${link.title}`, visible: true });
+    clearTimeout(toastT.current);
+    toastT.current = setTimeout(() => setToast(t => ({ ...t, visible: false })), 1400);
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '40px 20px',
+      background: `
+        radial-gradient(1200px 700px at 20% 0%, #E9EEF8 0%, rgba(233,238,248,0) 60%),
+        radial-gradient(1000px 600px at 90% 100%, #F2EAF2 0%, rgba(242,234,242,0) 60%),
+        linear-gradient(180deg, #EEEEF1 0%, #E5E5E9 100%)`,
+    }}>
+      <div style={{
+        position: 'fixed', top: 28, left: 28,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 10, letterSpacing: 1.5, color: 'rgba(0,0,0,0.35)',
+        textTransform: 'uppercase',
+      }}>
+        Anomaly Gate · Mobile · v1.1
+      </div>
+      <div style={{
+        position: 'fixed', top: 28, right: 28,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 10, letterSpacing: 1.5, color: 'rgba(0,0,0,0.35)',
+        textTransform: 'uppercase',
+        display: 'flex', alignItems: 'center', gap: 6,
+      }}>
+        <span style={{
+          width: 6, height: 6, borderRadius: 3, background: '#47C16E',
+          boxShadow: '0 0 6px rgba(71,193,110,0.5)',
+        }}/>
+        Live Preview
+      </div>
+
+      <div style={{position:"fixed",inset:0,overflow:"auto"}}>
+        <HubScreen tweaks={tweaks} onCardClick={handleCard}/>
+      </div>
+
+      <Toast msg={toast.msg} visible={toast.visible}/>
+      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksOpen}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
