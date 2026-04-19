@@ -143,10 +143,6 @@ function LinkRow({ link, cardStyle, editMode, dragging, onClick, onDelete, onDra
   return (
     <div
       style={{ position: 'relative', marginBottom: 10 }}
-      draggable={editMode}
-      onDragStart={(e) => { onDragStart?.(e); }}
-      onDragOver={(e) => { e.preventDefault(); onDragOver?.(e); }}
-      onDrop={(e) => { e.preventDefault(); onDrop?.(e); }}
     >
       {/* Delete action revealed behind */}
       {editMode && (
@@ -258,10 +254,6 @@ function CategorySection({
 
   return (
     <div style={{ marginBottom: 18 }}
-         draggable={editMode}
-         onDragStart={(e) => { if (editMode) { setDragState({ kind: 'category', fromId: cat.id }); e.stopPropagation(); } }}
-         onDragOver={(e) => { if (editMode && dragState?.kind === 'category') e.preventDefault(); }}
-         onDrop={(e) => { if (editMode && dragState?.kind === 'category') { e.preventDefault(); onReorderCategory(dragState.fromId, cat.id); setDragState(null); } }}
     >
       {/* Header — clickable to toggle */}
       <button
@@ -915,6 +907,9 @@ function App() {
   }, []);
 
   const handleCard = (link) => {
+    if (link.href && !link.href.startsWith('#')) {
+      window.open(link.href, '_blank');
+    }
     setToast({ msg: `→ ${link.title}`, visible: true });
     clearTimeout(toastT.current);
     toastT.current = setTimeout(() => setToast(t => ({ ...t, visible: false })), 1400);
