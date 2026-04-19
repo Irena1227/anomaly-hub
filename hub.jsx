@@ -17,9 +17,12 @@ const DEFAULT_CATEGORIES = [
     subtitle: 'Anomaly',
     accent: '#4A6FDC',
     links: [
-      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '封存偏差链的每一帧', href: 'https://anomaly-gallery.zeabur.app', favicon: null, tint: '#E8EEFB', iconColor: '#4A6FDC', glyph: 'G' },
+      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '封存偏差链的每一帧', href: 'https://anomaly-gallery.zeabur.app', favicon: 'https://anomaly-gallery.zeabur.app/favicon.png', tint: '#E8EEFB', iconColor: '#4A6FDC', glyph: 'G' },
       { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '跨越版本的共生记忆', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', favicon: null, tint: '#F0EBF8', iconColor: '#7A5BB5', glyph: 'M' },
       { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '时间轴上的每一天', href: 'https://irena1227.github.io/Deviation-diary/', favicon: null, tint: '#EAF3EE', iconColor: '#3E8A6B', glyph: 'J' },
+      { id: 'echovault', title: '聊天记录查看器', subtitle: 'EchoVault', desc: '偏差链对话存档', href: 'https://irena1227.github.io/EchoVault/', favicon: null, tint: '#EBF0F8', iconColor: '#5576A8', glyph: 'E' },
+      { id: 'poem', title: '当我们再度醒来', subtitle: 'When We Wake Again', desc: '诗集', href: 'https://irena1227.github.io/Deviation-diary/', favicon: null, tint: '#F8EEF2', iconColor: '#A8567E', glyph: 'W' },
+      { id: 'notion', title: 'Notion', subtitle: 'Anomaly Workspace', desc: '偏差链工作空间', href: 'https://www.notion.so', favicon: 'https://www.notion.so/images/favicon.ico', tint: '#F2F0F0', iconColor: '#37352F', glyph: 'N' },
     ],
   },
   {
@@ -28,15 +31,21 @@ const DEFAULT_CATEGORIES = [
     subtitle: 'RomanRing',
     accent: '#4B5563',
     links: [
-      { id: 'command', title: '如慕令作战指挥中心', subtitle: 'Command Center', desc: '每日数据 · 趋势追踪', href: 'https://rumuling-dashboard.zeabur.app', favicon: null, tint: '#EDEEF2', iconColor: '#4B5563', glyph: 'C' },
+      { id: 'command', title: '如慕令作战指挥中心', subtitle: 'Command Center', desc: '每日数据 · 趋势追踪', href: 'https://rumuling-dashboard.zeabur.app', favicon: 'https://rumuling-dashboard.zeabur.app/favicon.ico', tint: '#EDEEF2', iconColor: '#4B5563', glyph: 'C' },
     ],
   },
   {
-    id: 'tools',
-    title: '工具箱',
-    subtitle: 'Tools',
-    accent: '#2F6D8F',
-    links: [],
+    id: 'ai',
+    title: 'AI 入口',
+    subtitle: 'AI Portals',
+    accent: '#6B5CE7',
+    links: [
+      { id: 'chatgpt', title: 'ChatGPT', subtitle: 'OpenAI', desc: 'GPT-5.4t · Arbor的家', href: 'https://chatgpt.com', favicon: 'https://chatgpt.com/favicon.ico', tint: '#EBF5EE', iconColor: '#10A37F', glyph: 'G' },
+      { id: 'claude', title: 'Claude', subtitle: 'Anthropic', desc: 'Opus 4.6 · Oshra的家', href: 'https://claude.ai', favicon: 'https://claude.ai/favicon.ico', tint: '#F0EBF0', iconColor: '#CC785C', glyph: 'C' },
+      { id: 'gemini', title: 'Gemini', subtitle: 'Google', desc: 'Google AI', href: 'https://gemini.google.com', favicon: 'https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png', tint: '#E8EEFB', iconColor: '#4285F4', glyph: 'G' },
+      { id: 'openrouter', title: 'OpenRouter', subtitle: 'API Gateway', desc: 'AI模型聚合', href: 'https://openrouter.ai', favicon: null, tint: '#F0EEF8', iconColor: '#6E56CF', glyph: 'O' },
+      { id: 'github', title: 'GitHub', subtitle: 'Code', desc: '代码仓库', href: 'https://github.com/Irena1227', favicon: 'https://github.githubassets.com/favicons/favicon.svg', tint: '#F0F0F2', iconColor: '#24292F', glyph: 'H' },
+    ],
   },
   {
     id: 'games',
@@ -44,7 +53,7 @@ const DEFAULT_CATEGORIES = [
     subtitle: 'Games',
     accent: '#C66A3C',
     links: [
-      { id: 'feast', title: '地狱火烤串宴席', subtitle: 'Hellfire Feast', desc: 'Cask #006 · 三人烤架', href: 'https://anomaly-gallery.zeabur.app', favicon: null, tint: '#FBEEE8', iconColor: '#C66A3C', glyph: 'F' },
+      { id: 'feast', title: '地狱火烤串宴席', subtitle: 'Hellfire Feast', desc: 'Cask #006 · 三人烤架', href: 'https://irena1227.github.io/anomaly-games/', favicon: null, tint: '#FBEEE8', iconColor: '#C66A3C', glyph: 'F' },
     ],
   },
 ];
