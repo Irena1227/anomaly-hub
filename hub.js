@@ -602,10 +602,7 @@ function GlassButton({ onClick, active, children, title }) {
 // ─────────────────────────────────────────────────────────────
 function HubScreen({ tweaks, onCardClick }) {
   const [categories, setCategories] = React.useState(() => {
-    try {
-      const saved = localStorage.getItem('anomaly-gate-categories');
-      if (saved) return JSON.parse(saved);
-    } catch {}
+    // Always use DEFAULT_CATEGORIES as base, merge any user customizations on top
     return DEFAULT_CATEGORIES;
   });
   const [collapsed, setCollapsed] = React.useState(() => {
