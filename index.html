@@ -334,6 +334,22 @@
     gap: 28px;
   }
   .section-block { display: flex; flex-direction: column; gap: 16px; }
+  .section-content {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+    transition: grid-template-rows 280ms ease, opacity 240ms ease, transform 240ms ease;
+  }
+  .section-content.collapsed {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  .section-content-inner {
+    overflow: hidden;
+    padding-top: 2px;
+  }
   .section-row {
     display: flex;
     align-items: center;
@@ -367,6 +383,10 @@
   }
   .section-arrow.collapsed {
     transform: rotate(-90deg);
+  }
+  .view-stage {
+    animation: viewFade 320ms ease;
+    transform-origin: top center;
   }
   .section-title {
     font-size: 22px;
@@ -526,6 +546,11 @@
   @keyframes rise {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes viewFade {
+    from { opacity: 0; transform: translateY(12px) scale(0.992); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @media (max-width: 1260px) {
@@ -1055,7 +1080,7 @@ function App() {
             </label>
           </section>
 
-          <section className="section-list">
+          <section className="section-list view-stage" key={activeMenu + ':' + normalizedQuery}>
             {displayCategories.length ? displayCategories.map((category) => (
               <section className="section-block" key={category.id}>
                 <div className="section-row">
@@ -1084,13 +1109,15 @@ function App() {
                     </button>
                   ) : null}
                 </div>
-                {!collapsedSections[category.id] ? (
-                  <div className="card-grid">
-                    {category.links.map((link) => (
-                      <PortalCard key={link.id} link={link} onOpen={openLink} />
-                    ))}
+                <div className={['section-content', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}>
+                  <div className="section-content-inner">
+                    <div className="card-grid">
+                      {category.links.map((link) => (
+                        <PortalCard key={link.id} link={link} onOpen={openLink} />
+                      ))}
+                    </div>
                   </div>
-                ) : null}
+                </div>
               </section>
             )) : (
               <div className="empty-state">没有搜到对应入口，换个词试试，或者回到首页看看。</div>
