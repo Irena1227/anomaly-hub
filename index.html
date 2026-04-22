@@ -119,6 +119,116 @@
   .menu-emoji { width: 22px; text-align: center; font-size: 16px; }
   .menu-label { font-size: 14px; font-weight: 600; }
 
+  .settings-panel {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: min(420px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(255,255,255,0.62);
+    backdrop-filter: blur(24px) saturate(145%);
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    box-shadow: 0 20px 60px rgba(76, 56, 104, 0.18);
+    z-index: 60;
+  }
+  .settings-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+  .settings-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #46385e;
+  }
+  .settings-close {
+    border: none;
+    background: rgba(91, 77, 120, 0.08);
+    color: #66557f;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    cursor: pointer;
+    font: inherit;
+  }
+  .settings-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.56);
+    border: 1px solid rgba(187, 171, 214, 0.18);
+    margin-bottom: 14px;
+  }
+  .settings-block h3 {
+    margin: 0;
+    font-size: 15px;
+    color: #4c4062;
+  }
+  .settings-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #857a9a;
+  }
+  .settings-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .settings-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: #8c65d5;
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .settings-btn.secondary {
+    background: rgba(91, 77, 120, 0.10);
+    color: #625577;
+  }
+  .settings-input,
+  .settings-select,
+  .settings-textarea {
+    width: 100%;
+    border: 1px solid rgba(170, 154, 196, 0.32);
+    background: rgba(255,255,255,0.84);
+    border-radius: 14px;
+    padding: 11px 12px;
+    font: inherit;
+    font-size: 14px;
+    color: #3f3355;
+    outline: none;
+  }
+  .settings-textarea {
+    min-height: 74px;
+    resize: vertical;
+  }
+  .settings-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: #817694;
+  }
+  .thumb-preview {
+    width: 100%;
+    height: 120px;
+    border-radius: 18px;
+    background: rgba(240, 231, 250, 0.8) center / cover no-repeat;
+    border: 1px dashed rgba(160, 140, 194, 0.4);
+  }
+
   .sidebar-foot {
     padding-top: 24px;
     color: #7c7394;
@@ -464,6 +574,7 @@ const MENU_ITEMS = [
   { id: 'anomaly', icon: 'sparkles', label: '偏差链' },
   { id: 'romanring', icon: 'gem', label: '如慕令' },
   { id: 'collection', icon: 'star', label: '收藏' },
+  { id: 'settings', icon: 'settings', label: '设置' },
 ];
 
 function MenuIcon({ type }) {
@@ -507,10 +618,106 @@ function MenuIcon({ type }) {
     );
   }
 
+  if (type === 'settings') {
+    return (
+      <svg {...commonProps}>
+        <circle cx="12" cy="12" r="3.2" />
+        <path d="M12 2.8v2.1" />
+        <path d="M12 19.1v2.1" />
+        <path d="m4.93 4.93 1.48 1.48" />
+        <path d="m17.59 17.59 1.48 1.48" />
+        <path d="M2.8 12h2.1" />
+        <path d="M19.1 12h2.1" />
+        <path d="m4.93 19.07 1.48-1.48" />
+        <path d="m17.59 6.41 1.48-1.48" />
+      </svg>
+    );
+  }
+
   return (
     <svg {...commonProps}>
       <path d="m12 3 2.7 5.5 6.1.9-4.4 4.2 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.2 6.1-.9L12 3Z" />
     </svg>
+  );
+}
+
+function SettingsPanel({
+  open,
+  onClose,
+  backgroundImage,
+  onBackgroundUpload,
+  onBackgroundReset,
+  categories,
+  onAddLink,
+}) {
+  const [title, setTitle] = React.useState('');
+  const [subtitle, setSubtitle] = React.useState('');
+  const [desc, setDesc] = React.useState('');
+  const [href, setHref] = React.useState('');
+  const [catId, setCatId] = React.useState(categories[0]?.id || 'anomaly');
+
+  if (!open) return null;
+
+  const handleAdd = () => {
+    if (!title.trim() || !href.trim()) return;
+    onAddLink(catId, {
+      id: 'custom-' + Date.now(),
+      title: title.trim(),
+      subtitle: subtitle.trim() || 'Custom Link',
+      desc: desc.trim() || '后来被你亲手放进来的入口。',
+      href: href.trim(),
+    });
+    setTitle('');
+    setSubtitle('');
+    setDesc('');
+    setHref('');
+  };
+
+  return (
+    <div className="settings-panel">
+      <div className="settings-head">
+        <div className="settings-title">设置</div>
+        <button className="settings-close" onClick={onClose}>×</button>
+      </div>
+
+      <div className="settings-block">
+        <h3>背景图</h3>
+        <div className="settings-text">你可以自己上传背景图慢慢试，不用每次都喊我改代码。</div>
+        <div className="thumb-preview" style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }} />
+        <div className="settings-row">
+          <label className="settings-btn">
+            上传背景
+            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onBackgroundUpload} />
+          </label>
+          <button className="settings-btn secondary" onClick={onBackgroundReset}>恢复默认</button>
+        </div>
+      </div>
+
+      <div className="settings-block">
+        <h3>新增网址链接</h3>
+        <div className="settings-text">把你后来想到的新入口自己塞进来，我就不再把这个功能砍掉了。</div>
+        <label className="settings-label">放到哪个分类
+          <select className="settings-select" value={catId} onChange={(e) => setCatId(e.target.value)}>
+            {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.title}</option>)}
+          </select>
+        </label>
+        <label className="settings-label">标题
+          <input className="settings-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="例如：新的秘密入口" />
+        </label>
+        <label className="settings-label">副标题
+          <input className="settings-input" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="可不填" />
+        </label>
+        <label className="settings-label">链接
+          <input className="settings-input" value={href} onChange={(e) => setHref(e.target.value)} placeholder="https://..." />
+        </label>
+        <label className="settings-label">描述
+          <textarea className="settings-textarea" value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="这扇门通向哪里。" />
+        </label>
+        <div className="settings-row">
+          <button className="settings-btn" onClick={handleAdd}>新增链接</button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -570,6 +777,22 @@ function App() {
   const { toasts, push } = useToasts();
   const [query, setQuery] = React.useState('');
   const [activeMenu, setActiveMenu] = React.useState('home');
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [customCategories, setCustomCategories] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('anomaly-custom-categories');
+      return saved ? JSON.parse(saved) : RAW_CATEGORIES;
+    } catch {
+      return RAW_CATEGORIES;
+    }
+  });
+  const [backgroundImage, setBackgroundImage] = React.useState(() => {
+    try {
+      return localStorage.getItem('anomaly-custom-background') || '';
+    } catch {
+      return '';
+    }
+  });
 
   React.useEffect(() => {
     const onKeyDown = (event) => {
@@ -583,10 +806,31 @@ function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('anomaly-custom-categories', JSON.stringify(customCategories));
+    } catch {}
+  }, [customCategories]);
+
+  React.useEffect(() => {
+    try {
+      if (backgroundImage) localStorage.setItem('anomaly-custom-background', backgroundImage);
+      else localStorage.removeItem('anomaly-custom-background');
+    } catch {}
+  }, [backgroundImage]);
+
+  React.useEffect(() => {
+    document.body.style.background = backgroundImage
+      ? `url(${backgroundImage}) center top / cover no-repeat fixed`
+      : '';
+    if (!backgroundImage) document.body.style.removeProperty('background');
+    return () => document.body.style.removeProperty('background');
+  }, [backgroundImage]);
+
   const normalizedQuery = query.trim().toLowerCase();
 
   const displayCategories = React.useMemo(() => {
-    const filtered = RAW_CATEGORIES.map((category) => ({
+    const filtered = customCategories.map((category) => ({
       ...category,
       links: category.links.filter((link) => {
         if (!normalizedQuery) return true;
@@ -595,10 +839,10 @@ function App() {
       }),
     })).filter((category) => category.links.length > 0);
 
-    if (activeMenu === 'home') return filtered;
+    if (activeMenu === 'home' || activeMenu === 'settings') return filtered;
     if (activeMenu === 'collection') return filtered.filter((category) => category.id === 'ai' || category.id === 'games');
     return filtered.filter((category) => category.id === activeMenu);
-  }, [normalizedQuery, activeMenu]);
+  }, [normalizedQuery, activeMenu, customCategories]);
 
   const openLink = React.useCallback((link) => {
     if (!link.href || link.href === '#') {
@@ -608,6 +852,27 @@ function App() {
     window.open(link.href, '_blank', 'noopener,noreferrer');
     push(link.title, '已在新窗口打开。');
   }, [push]);
+
+  const handleBackgroundUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setBackgroundImage(reader.result);
+      push('背景图已更新', '你现在可以自己慢慢试喜欢的版本。');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleBackgroundReset = () => {
+    setBackgroundImage('');
+    push('背景已恢复', '又回到默认的底色了。');
+  };
+
+  const handleAddLink = (catId, newLink) => {
+    setCustomCategories((prev) => prev.map((cat) => cat.id === catId ? { ...cat, links: [...cat.links, newLink] } : cat));
+    push('新入口已放好', `我把 ${newLink.title} 塞进去了。`);
+  };
 
   return (
     <>
@@ -627,7 +892,14 @@ function App() {
                 <button
                   key={item.id}
                   className={['menu-item', activeMenu === item.id ? 'active' : ''].join(' ')}
-                  onClick={() => setActiveMenu(item.id)}
+                  onClick={() => {
+                    if (item.id === 'settings') {
+                      setSettingsOpen(true);
+                      setActiveMenu('home');
+                    } else {
+                      setActiveMenu(item.id);
+                    }
+                  }}
                 >
                   <span className="menu-emoji"><MenuIcon type={item.icon} /></span>
                   <span className="menu-label">{item.label}</span>
@@ -685,6 +957,16 @@ function App() {
           </section>
         </main>
       </div>
+
+      <SettingsPanel
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        backgroundImage={backgroundImage}
+        onBackgroundUpload={handleBackgroundUpload}
+        onBackgroundReset={handleBackgroundReset}
+        categories={customCategories}
+        onAddLink={handleAddLink}
+      />
 
       <div className="toast-stack">
         {toasts.map((toast) => (
