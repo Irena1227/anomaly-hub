@@ -33,7 +33,7 @@
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     color: var(--text);
     background:
-      linear-gradient(rgba(248, 245, 255, 0.58), rgba(255, 240, 245, 0.50)),
+      linear-gradient(rgba(248, 245, 255, 0.06), rgba(255, 240, 245, 0.04)),
       url("xianing-bg.jpg") center top / cover no-repeat fixed,
       var(--bg-main);
     -webkit-font-smoothing: antialiased;
@@ -41,26 +41,7 @@
   }
   body::before,
   body::after {
-    content: "";
-    position: fixed;
-    pointer-events: none;
-    z-index: 0;
-    border-radius: 999px;
-    filter: blur(12px);
-  }
-  body::before {
-    width: 520px;
-    height: 520px;
-    right: -60px;
-    top: -40px;
-    background: radial-gradient(circle, rgba(255,255,255,0.58) 0%, rgba(242,221,255,0.18) 38%, rgba(242,221,255,0) 76%);
-  }
-  body::after {
-    width: 360px;
-    height: 360px;
-    right: 90px;
-    top: 40px;
-    background: radial-gradient(circle, rgba(255,241,247,0.56) 0%, rgba(255,229,241,0.18) 36%, rgba(255,229,241,0) 74%);
+    content: none;
   }
   #root { position: relative; z-index: 1; min-height: 100vh; }
 
@@ -91,25 +72,16 @@
   .brand-wrap { display: flex; flex-direction: column; gap: 26px; }
   .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
   .avatar-orb {
-    width: 80px;
-    height: 80px;
-    border-radius: 999px;
-    background:
-      linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)),
-      url("anomaly-avatar.jpg") center / cover no-repeat;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.75),
-      0 12px 30px rgba(171, 140, 214, 0.24);
+    width: 110px;
+    height: 150px;
+    border-radius: 0;
+    background: url("anomaly-avatar.jpg") center / contain no-repeat;
+    box-shadow: none;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
   }
   .avatar-orb::after {
-    content: "✦";
-    position: absolute;
-    right: -6px;
-    top: 8px;
-    font-size: 18px;
-    color: #b18ce6;
+    content: none;
   }
   .brand-title {
     font-size: 14px;
@@ -166,33 +138,19 @@
     min-width: 0;
     border-radius: 34px;
     padding: 36px;
-    background: rgba(255,255,255,0.34);
-    border: 1px solid rgba(255,255,255,0.5);
-    backdrop-filter: blur(20px) saturate(130%);
-    -webkit-backdrop-filter: blur(20px) saturate(130%);
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.38);
+    backdrop-filter: blur(10px) saturate(115%);
+    -webkit-backdrop-filter: blur(10px) saturate(115%);
     box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
   }
   .main::before {
-    content: "";
-    position: absolute;
-    width: 420px;
-    height: 420px;
-    right: -140px;
-    top: -120px;
-    background: radial-gradient(circle, rgba(244, 229, 255, 0.92) 0%, rgba(244, 229, 255, 0.34) 34%, rgba(244, 229, 255, 0) 70%);
-    pointer-events: none;
+    content: none;
   }
   .main::after {
-    content: "";
-    position: absolute;
-    width: 280px;
-    height: 280px;
-    right: 10px;
-    top: 10px;
-    background: radial-gradient(circle, rgba(255, 234, 244, 0.86) 0%, rgba(255, 234, 244, 0.24) 34%, rgba(255, 234, 244, 0) 72%);
-    pointer-events: none;
+    content: none;
   }
 
   .hero {
