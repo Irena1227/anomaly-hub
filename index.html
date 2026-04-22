@@ -95,12 +95,13 @@
     height: 80px;
     border-radius: 999px;
     background:
-      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.15) 24%, rgba(255,255,255,0) 28%),
-      linear-gradient(135deg, #ead8ff 0%, #f5dbe9 52%, #dfe6ff 100%);
+      linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)),
+      url("anomaly-avatar.jpg") center / cover no-repeat;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,0.75),
       0 12px 30px rgba(171, 140, 214, 0.24);
     position: relative;
+    overflow: hidden;
   }
   .avatar-orb::after {
     content: "✦";
