@@ -660,6 +660,9 @@ function mergeCategoryIcons(savedCategories) {
 
     return {
       ...category,
+      title: sourceCategory.title || category.title,
+      subtitle: sourceCategory.subtitle || category.subtitle,
+      navLabel: sourceCategory.navLabel || category.navLabel,
       links: category.links.map((link) => {
         const sourceLink = sourceCategory.links.find((item) => item.id === link.id);
         if (!sourceLink) return link;
