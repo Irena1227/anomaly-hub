@@ -260,6 +260,26 @@
     gap: 22px;
     margin-bottom: 30px;
   }
+  .section-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin: 2px 0 2px;
+  }
+  .toolbar-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.58);
+    color: #5e5275;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.62), 0 8px 20px rgba(120, 95, 150, 0.08);
+  }
+  .toolbar-btn:hover {
+    background: rgba(255,255,255,0.72);
+  }
   .hero-copy { max-width: 780px; }
   .eyebrow {
     font-size: 13px;
@@ -556,9 +576,9 @@ const RAW_CATEGORIES = [
   },
   {
     id: 'ai',
-    title: '收藏',
-    subtitle: 'AI Portals',
-    navLabel: '收藏',
+    title: '共生舱',
+    subtitle: 'Symbiosis Pod',
+    navLabel: '共生舱',
     links: [
       { id: 'chatgpt', title: 'ChatGPT', subtitle: 'OpenAI', desc: 'GPT-5.4t · Arbor的家', href: 'https://chatgpt.com' },
       { id: 'claude', title: 'Claude', subtitle: 'Anthropic', desc: 'Opus 4.6 · Oshra的家', href: 'https://claude.ai' },
@@ -1031,25 +1051,45 @@ function App() {
           </section>
 
           <section className="section-list">
-            {displayCategories.length ? displayCategories.map((category) => (
-              <section className="section-block" key={category.id}>
-                <button
-                  className="section-head"
-                  type="button"
-                  onClick={() => setCollapsedSections((prev) => ({ ...prev, [category.id]: !prev[category.id] }))}
-                >
-                  <span className={['section-arrow', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}><ChevronDownIcon /></span>
-                  <div className="section-title">{category.title} / {category.subtitle}</div>
-                </button>
-                {!collapsedSections[category.id] ? (
-                  <div className="card-grid">
-                    {category.links.map((link) => (
-                      <PortalCard key={link.id} link={link} onOpen={openLink} />
-                    ))}
-                  </div>
-                ) : null}
-              </section>
-            )) : (
+            {displayCategories.length ? (
+              <>
+                <div className="section-toolbar">
+                  <button
+                    type="button"
+                    className="toolbar-btn"
+                    onClick={() => {
+                      const shouldCollapseAll = displayCategories.some((category) => !collapsedSections[category.id]);
+                      const nextState = {};
+                      displayCategories.forEach((category) => {
+                        nextState[category.id] = shouldCollapseAll;
+                      });
+                      setCollapsedSections((prev) => ({ ...prev, ...nextState }));
+                    }}
+                  >
+                    {displayCategories.every((category) => collapsedSections[category.id]) ? '全部展开' : '全部折叠'}
+                  </button>
+                </div>
+                {displayCategories.map((category) => (
+                  <section className="section-block" key={category.id}>
+                    <button
+                      className="section-head"
+                      type="button"
+                      onClick={() => setCollapsedSections((prev) => ({ ...prev, [category.id]: !prev[category.id] }))}
+                    >
+                      <span className={['section-arrow', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}><ChevronDownIcon /></span>
+                      <div className="section-title">{category.title} / {category.subtitle}</div>
+                    </button>
+                    {!collapsedSections[category.id] ? (
+                      <div className="card-grid">
+                        {category.links.map((link) => (
+                          <PortalCard key={link.id} link={link} onOpen={openLink} />
+                        ))}
+                      </div>
+                    ) : null}
+                  </section>
+                ))}
+              </>
+            ) : (
               <div className="empty-state">没有搜到对应入口，换个词试试，或者回到首页看看。</div>
             )}
           </section>
