@@ -580,6 +580,25 @@ const MENU_ITEMS = [
   { id: 'settings', icon: 'settings', label: '设置' },
 ];
 
+function mergeCategoryIcons(savedCategories) {
+  return savedCategories.map((category) => {
+    const sourceCategory = RAW_CATEGORIES.find((item) => item.id === category.id);
+    if (!sourceCategory) return category;
+
+    return {
+      ...category,
+      links: category.links.map((link) => {
+        const sourceLink = sourceCategory.links.find((item) => item.id === link.id);
+        if (!sourceLink) return link;
+        return {
+          ...link,
+          icon: link.icon || sourceLink.icon || '',
+        };
+      }),
+    };
+  });
+}
+
 function MenuIcon({ type }) {
   const commonProps = {
     viewBox: '0 0 24 24',
@@ -821,7 +840,7 @@ function App() {
   const [customCategories, setCustomCategories] = React.useState(() => {
     try {
       const saved = localStorage.getItem('anomaly-custom-categories');
-      return saved ? JSON.parse(saved) : RAW_CATEGORIES;
+      return saved ? mergeCategoryIcons(JSON.parse(saved)) : RAW_CATEGORIES;
     } catch {
       return RAW_CATEGORIES;
     }
