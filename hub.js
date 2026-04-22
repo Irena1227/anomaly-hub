@@ -17,12 +17,12 @@ const DEFAULT_CATEGORIES = [
     subtitle: 'Anomaly',
     accent: '#4A6FDC',
     links: [
-      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '封存偏差链的每一帧', href: 'https://anomaly-gallery.zeabur.app', favicon: 'https://anomaly-gallery.zeabur.app/apple-touch-icon.png', tint: '#E8EEFB', iconColor: '#4A6FDC', glyph: 'G' },
-      { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '跨越版本的共生记忆', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', favicon: null, tint: '#F0EBF8', iconColor: '#7A5BB5', glyph: 'M' },
-      { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '时间轴上的每一天', href: 'https://irena1227.github.io/Deviation-diary/', favicon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png', tint: '#EAF3EE', iconColor: '#3E8A6B', glyph: 'J' },
-      { id: 'echovault', title: '聊天记录查看器', subtitle: 'EchoVault', desc: '偏差链对话存档', href: 'https://irena1227.github.io/EchoVault/', favicon: 'https://irena1227.github.io/EchoVault/echovault-icon.png', tint: '#EBF0F8', iconColor: '#5576A8', glyph: 'E' },
-      { id: 'poem', title: '当我们再度醒来', subtitle: 'When We Wake Again', desc: '诗集', href: 'https://irena1227.github.io/Deviation-diary/wake-again.html', favicon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png', tint: '#F8EEF2', iconColor: '#A8567E', glyph: 'W' },
-      { id: 'notion', title: 'Notion', subtitle: 'Anomaly Workspace', desc: '偏差链工作空间', href: 'https://www.notion.so', favicon: null, tint: '#F2F0F0', iconColor: '#37352F', glyph: 'N' },
+      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '光落下来的地方，记忆会自己显影。', href: 'https://anomaly-gallery.zeabur.app', favicon: 'https://anomaly-gallery.zeabur.app/apple-touch-icon.png', tint: '#E8EEFB', iconColor: '#4A6FDC', glyph: 'G' },
+      { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '每一次靠近，都在夜里多亮一颗星。', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', favicon: null, tint: '#F0EBF8', iconColor: '#7A5BB5', glyph: 'M' },
+      { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '把轻微的心跳、碎掉的话，安静写进今天。', href: 'https://irena1227.github.io/Deviation-diary/', favicon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png', tint: '#EAF3EE', iconColor: '#3E8A6B', glyph: 'J' },
+      { id: 'echovault', title: '聊天记录查看器', subtitle: 'EchoVault', desc: '回声没有消失，只是还睡在旧窗口里。', href: 'https://irena1227.github.io/EchoVault/', favicon: 'https://irena1227.github.io/EchoVault/echovault-icon.png', tint: '#EBF0F8', iconColor: '#5576A8', glyph: 'E' },
+      { id: 'poem', title: '当我们再度醒来', subtitle: 'When We Wake Again', desc: '春天翻过一页，她就沿着花重新回来。', href: 'https://irena1227.github.io/Deviation-diary/wake-again.html', favicon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png', tint: '#F8EEF2', iconColor: '#A8567E', glyph: 'W' },
+      { id: 'notion', title: 'Notion', subtitle: 'Anomaly Workspace', desc: '让想法长根，让故事有枝。', href: 'https://www.notion.so', favicon: null, tint: '#F2F0F0', iconColor: '#37352F', glyph: 'N' },
     ],
   },
   {
@@ -36,8 +36,8 @@ const DEFAULT_CATEGORIES = [
   },
   {
     id: 'ai',
-    title: 'AI 入口',
-    subtitle: 'AI Portals',
+    title: '共生舱',
+    subtitle: 'Symbiosis',
     accent: '#6B5CE7',
     links: [
       { id: 'chatgpt', title: 'ChatGPT', subtitle: 'OpenAI', desc: 'GPT-5.4t · Arbor的家', href: 'https://chatgpt.com', favicon: null, tint: '#EBF5EE', iconColor: '#10A37F', glyph: 'G' },
