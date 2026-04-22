@@ -557,20 +557,295 @@
     .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 900px) {
-    .app-shell { grid-template-columns: 1fr; padding: 16px; }
-    .sidebar {
-      position: relative;
-      top: 0;
-      min-height: auto;
-      gap: 24px;
+    body {
+      background-attachment: scroll;
     }
-    .brand-top { align-items: flex-start; text-align: left; }
-    .menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .main { padding: 24px 18px; border-radius: 28px; }
-    .card-grid { grid-template-columns: 1fr; }
-    .hero-title { font-size: 40px; }
-    .search-bar { width: 100%; }
+    #root {
+      overflow-x: hidden;
+    }
+    .app-shell {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .sidebar {
+      display: none;
+    }
+    .main {
+      padding: 0 14px calc(92px + env(safe-area-inset-bottom, 0));
+      border-radius: 0;
+      overflow: visible;
+    }
+    .hero {
+      position: relative;
+      min-height: 292px;
+      margin: 0 -14px;
+      padding: 18px 18px 24px;
+      border-radius: 0 0 28px 28px;
+      background: linear-gradient(145deg, rgba(240,232,251,0.98) 0%, rgba(228,215,250,0.96) 26%, rgba(238,230,251,0.92) 58%, rgba(250,244,252,0.95) 100%);
+      overflow: hidden;
+      box-shadow: 0 18px 46px rgba(137, 108, 183, 0.10);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(248,244,252,0.96) 0%, rgba(248,244,252,0.90) 25%, rgba(248,244,252,0.62) 48%, rgba(248,244,252,0.12) 74%, transparent 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -18px;
+      top: 0;
+      width: 74%;
+      height: 100%;
+      background: url("xianing-bg.jpg") right center / cover no-repeat;
+      opacity: 0.98;
+      z-index: 0;
+      pointer-events: none;
+      mask-image: linear-gradient(to left, rgba(0,0,0,1) 54%, rgba(0,0,0,0.85) 74%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 54%, rgba(0,0,0,0.85) 74%, transparent 100%);
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 52%;
+      padding-top: 40px;
+    }
+    .eyebrow {
+      display: none;
+    }
+    .hero-title {
+      font-size: clamp(32px, 11vw, 48px);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+    }
+    .hero-title .dark {
+      display: block;
+      color: #2d233f;
+      font-weight: 700;
+    }
+    .hero-title .accent {
+      display: block;
+      margin: 2px 0 0;
+      color: #7f64ca;
+      font-style: italic;
+      font-weight: 600;
+    }
+    .hero-subtitle {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(45,35,63,0.88);
+      font-family: "Noto Serif SC", serif;
+      font-weight: 500;
+    }
+    .hero-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: rgba(67,55,91,0.72);
+      max-width: 90%;
+    }
+    .search-bar {
+      width: 100%;
+      margin-top: -18px;
+      position: relative;
+      z-index: 3;
+      padding: 14px 16px;
+      gap: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 10px 24px rgba(137, 108, 183, 0.10);
+    }
+    .search-input {
+      font-size: 14px;
+    }
+    .search-shortcut {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 8px;
+    }
+    .section-list {
+      gap: 18px;
+      margin-top: 16px;
+      padding-bottom: 8px;
+    }
+    .section-block {
+      gap: 10px;
+    }
+    .section-row,
+    .section-head {
+      width: 100%;
+    }
+    .section-head {
+      justify-content: space-between;
+      padding: 2px 2px 8px;
+    }
+    .section-title {
+      font-size: 17px;
+    }
+    .section-toggle-all {
+      display: none;
+    }
+    .section-arrow {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.34);
+      box-shadow: none;
+    }
+    .card-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .portal-card {
+      grid-template-columns: 46px minmax(0, 1fr) 20px;
+      gap: 12px;
+      min-height: 0;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: 0 8px 24px rgba(134, 107, 183, 0.08);
+      align-items: center;
+    }
+    .icon-tile {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72), 0 4px 14px rgba(125, 103, 163, 0.08);
+    }
+    .tile-favicon {
+      width: 28px;
+      height: 28px;
+    }
+    .card-body {
+      display: block;
+      padding: 0;
+    }
+    .card-title {
+      font-size: 15px;
+      margin: 0;
+      line-height: 1.32;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-desc {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.5;
+      -webkit-line-clamp: 2;
+    }
+    .card-bottom {
+      margin: 0;
+      justify-content: center;
+      align-self: center;
+    }
+    .card-arrow {
+      width: 18px;
+      height: 18px;
+      background: transparent;
+      box-shadow: none;
+      color: #8a7da7;
+    }
+    .empty-state {
+      padding: 18px;
+      font-size: 13px;
+    }
+    .settings-panel {
+      top: auto;
+      right: auto;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: none;
+      max-height: min(82vh, 760px);
+      padding: 18px 18px calc(26px + env(safe-area-inset-bottom, 0));
+      border-radius: 24px 24px 0 0;
+    }
+    .toast-stack {
+      right: 14px;
+      left: 14px;
+      bottom: calc(84px + env(safe-area-inset-bottom, 0));
+    }
+    .toast {
+      min-width: 0;
+      max-width: none;
+      border-radius: 14px;
+    }
+    .mobile-topbar {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      z-index: 4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-menu-btn {
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.44);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 14px rgba(145, 113, 194, 0.10);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b5d85;
+    }
+    .mobile-bottom-nav {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: calc(10px + env(safe-area-inset-bottom, 0));
+      z-index: 55;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 2px;
+      padding: 10px 10px 8px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(18px) saturate(145%);
+      -webkit-backdrop-filter: blur(18px) saturate(145%);
+      box-shadow: 0 14px 40px rgba(125, 103, 163, 0.14);
+      border: 1px solid rgba(255,255,255,0.78);
+    }
+    .mobile-nav-item {
+      border: none;
+      background: transparent;
+      color: #998fb0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 0;
+      border-radius: 14px;
+      font: inherit;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .mobile-nav-item.active {
+      color: #7c5ecf;
+      background: rgba(124,94,207,0.08);
+    }
+    .mobile-nav-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
+
 </style>
 <script src="lib/react.min.js"></script>
 <script src="lib/react-dom.min.js"></script>
@@ -1059,6 +1334,11 @@ function App() {
         </aside>
 
         <main className="main">
+          <div className="mobile-topbar">
+            <button className="mobile-menu-btn" onClick={() => setSettingsOpen((v) => !v)} aria-label="打开菜单">
+              <MenuIcon type="settings" />
+            </button>
+          </div>
           <section className="hero">
             <div className="hero-copy">
               <div className="eyebrow">Memory console · all portals</div>
@@ -1093,7 +1373,7 @@ function App() {
                     onClick={() => setCollapsedSections((prev) => ({ ...prev, [category.id]: !prev[category.id] }))}
                   >
                     <span className={['section-arrow', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}><ChevronDownIcon /></span>
-                    <div className="section-title">{category.title} / {category.subtitle}</div>
+                    <div className="section-title">{category.title} <span className="section-subtitle">/ {category.subtitle}</span></div>
                   </button>
                   {category.id === displayCategories[0]?.id ? (
                     <button
@@ -1148,6 +1428,26 @@ function App() {
           </div>
         ))}
       </div>
+
+      <nav className="mobile-bottom-nav">
+        {MENU_ITEMS.map((item) => (
+          <button
+            key={item.id}
+            className={['mobile-nav-item', activeMenu ==== item.id || (item.id ==== 'home' && activeMenu === 'settings') ? 'active' : ''].join(' ')}
+            onClick={() => {
+              if (item.id ==== 'settings') {
+                setSettingsOpen((v) => !v);
+                setActiveMenu('home');
+              } else {
+                setActiveMenu(item.id);
+              }
+            }}
+          >
+            <span className="mobile-nav-icon"><MenuIcon type={item.icon} /></span>
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </nav>
     </>
   );
 }
