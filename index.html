@@ -10,480 +10,176 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --purple: #7c5ecf;
-    --purple-light: #a78bfa;
-    --purple-dark: #5b3fa0;
-    --bg: #f3eef9;
-    --card-bg: rgba(255,255,255,0.7);
-    --card-border: rgba(255,255,255,0.6);
-    --text: #2e2540;
-    --text-muted: #7f7497;
-    --text-soft: #a097b5;
-    --shadow-card: 0 2px 12px rgba(124,94,207,0.08);
-    --radius: 16px;
-    --tab-height: 64px;
+    --bg-main: linear-gradient(135deg, #f8f5ff 0%, #fcf7ff 38%, #fff0f5 100%);
+    --glass: rgba(255, 255, 255, 0.58);
+    --glass-strong: rgba(255, 255, 255, 0.72);
+    --border: rgba(125, 103, 163, 0.12);
+    --text: #342b46;
+    --muted: #7f7497;
+    --soft: #9d95af;
+    --shadow: 0 18px 50px rgba(116, 91, 150, 0.10);
+    --shadow-hover: 0 24px 60px rgba(116, 91, 150, 0.16);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 16px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
   body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     color: var(--text);
-    background: linear-gradient(160deg, #ede5f7 0%, #f5f0fc 30%, #f8f4ff 60%, #fdf0f5 100%);
-    min-height: 100vh;
+    background:
+      linear-gradient(rgba(248, 245, 255, 0.06), rgba(255, 240, 245, 0.04)),
+      url("xianing-bg.jpg") center top / cover no-repeat fixed,
+      var(--bg-main);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+  body::before,
+  body::after {
+    content: none;
+  }
+  #root { position: relative; z-index: 1; min-height: 100vh; }
 
-  /* Desktop: center the mobile layout */
-  #root {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    position: relative;
-    background: var(--bg);
-    box-shadow: 0 0 60px rgba(124,94,207,0.08);
-  }
-
-  @media (max-width: 480px) {
-    #root {
-      max-width: 100%;
-      box-shadow: none;
-    }
-  }
-
-  /* ── Hero ── */
-  .hero {
-    position: relative;
-    height: 260px;
-    background: linear-gradient(135deg, #c4b5e0 0%, #a78bfa 30%, #9f7aea 50%, #d8b4fe 80%, #ede5f7 100%);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 28px;
-  }
-  .hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 60%, rgba(255,255,255,0.15) 0%, transparent 40%),
-      radial-gradient(circle at 50% 80%, rgba(216,180,254,0.4) 0%, transparent 50%);
-    pointer-events: none;
-  }
-  .hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(1.5px 1.5px at 15% 25%, rgba(255,255,255,0.7) 50%, transparent 50%),
-      radial-gradient(1px 1px at 40% 15%, rgba(255,255,255,0.5) 50%, transparent 50%),
-      radial-gradient(1.5px 1.5px at 65% 35%, rgba(255,255,255,0.6) 50%, transparent 50%),
-      radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.4) 50%, transparent 50%),
-      radial-gradient(2px 2px at 25% 70%, rgba(255,255,255,0.5) 50%, transparent 50%),
-      radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,0.6) 50%, transparent 50%),
-      radial-gradient(1.5px 1.5px at 90% 45%, rgba(255,255,255,0.5) 50%, transparent 50%),
-      radial-gradient(1px 1px at 10% 85%, rgba(255,255,255,0.4) 50%, transparent 50%),
-      radial-gradient(2px 2px at 70% 75%, rgba(255,255,255,0.35) 50%, transparent 50%),
-      radial-gradient(1px 1px at 35% 90%, rgba(255,255,255,0.3) 50%, transparent 50%);
-    animation: sparkle 4s ease-in-out infinite alternate;
-    pointer-events: none;
-  }
-  @keyframes sparkle {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-  }
-
-  .hero-hamburger {
-    position: absolute;
-    top: 16px;
-    left: 18px;
-    width: 36px;
-    height: 36px;
-    border: none;
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    z-index: 5;
-  }
-  .hero-hamburger span {
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: rgba(255,255,255,0.9);
-    border-radius: 1px;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-  }
-  .hero-title {
-    font-family: "Caveat", "Noto Serif SC", cursive, serif;
-    font-size: 42px;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.1;
-    text-shadow: 0 2px 12px rgba(91,63,160,0.25);
-    margin-bottom: 10px;
-  }
-  .hero-sub {
-    font-family: "Noto Serif SC", serif;
-    font-size: 15px;
-    color: rgba(255,255,255,0.92);
-    font-weight: 400;
-    line-height: 1.6;
-    text-shadow: 0 1px 6px rgba(91,63,160,0.15);
-  }
-  .hero-desc {
-    font-size: 13px;
-    color: rgba(255,255,255,0.75);
-    margin-top: 6px;
-    font-weight: 400;
-  }
-
-  /* ── Search ── */
-  .search-wrap {
-    padding: 0 18px;
-    margin-top: -22px;
-    position: relative;
-    z-index: 10;
-  }
-  .search-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 16px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255,255,255,0.7);
-    box-shadow: 0 4px 20px rgba(124,94,207,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
-  }
-  .search-icon { color: var(--text-soft); display: flex; flex-shrink: 0; }
-  .search-input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    font: inherit;
-    font-size: 14px;
-    color: var(--text);
-  }
-  .search-input::placeholder { color: #b8aed0; }
-  .search-shortcut {
-    flex-shrink: 0;
-    padding: 4px 8px;
-    border-radius: 6px;
-    background: rgba(124,94,207,0.08);
-    color: var(--text-muted);
-    font: 500 11px/1 "JetBrains Mono", monospace;
-  }
-
-  /* ── Content ── */
-  .content-area {
-    padding: 20px 18px;
-    padding-bottom: calc(var(--tab-height) + 60px);
-  }
-
-  /* ── Section ── */
-  .section-block {
-    margin-bottom: 22px;
-  }
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0 12px;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .section-title-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--purple);
-    flex-shrink: 0;
-  }
-  .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-  .section-subtitle {
-    font-size: 12px;
-    color: var(--text-soft);
-    margin-left: 4px;
-  }
-  .section-toggle {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    border: none;
-    background: rgba(124,94,207,0.06);
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 200ms ease;
-    flex-shrink: 0;
-  }
-  .section-toggle.collapsed {
-    transform: rotate(-90deg);
-  }
-
-  /* ── Cards ── */
-  .card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow: hidden;
-    transition: max-height 300ms ease, opacity 200ms ease;
-  }
-  .card-list.collapsed {
-    max-height: 0 !important;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .link-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 14px;
-    border-radius: var(--radius);
-    background: var(--card-bg);
-    backdrop-filter: blur(12px) saturate(130%);
-    -webkit-backdrop-filter: blur(12px) saturate(130%);
-    border: 1px solid var(--card-border);
-    box-shadow: var(--shadow-card);
-    cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease;
-    text-decoration: none;
-    color: inherit;
-  }
-  .link-card:active {
-    transform: scale(0.98);
-  }
-  .link-card:hover {
-    box-shadow: 0 4px 20px rgba(124,94,207,0.14);
-  }
-
-  .card-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    overflow: hidden;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 6px rgba(124,94,207,0.08);
-    position: relative;
-  }
-  .card-icon img {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-  }
-  .card-icon .glyph {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-
-  .card-info {
-    flex: 1;
-    min-width: 0;
-  }
-  .card-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .card-desc {
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.5;
-    margin-top: 2px;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-arrow {
-    flex-shrink: 0;
-    color: var(--text-soft);
-    opacity: 0.5;
-  }
-
-  /* ── Empty state ── */
-  .empty-state {
+  .app-shell {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 22px;
     padding: 24px;
-    border-radius: var(--radius);
-    background: var(--card-bg);
-    color: var(--text-muted);
-    text-align: center;
-    font-size: 14px;
+    min-height: 100vh;
   }
 
-  /* ── Bottom quote ── */
-  .bottom-quote {
-    text-align: center;
-    padding: 16px 18px 8px;
-    font-size: 13px;
-    color: var(--text-soft);
-    font-family: "Noto Serif SC", serif;
-  }
-
-  /* ── Tab Bar ── */
-  .tab-bar {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    height: var(--tab-height);
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border-top: 1px solid rgba(124,94,207,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    z-index: 50;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-  .tab-item {
+  .sidebar {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 6px 0;
-    border: none;
+    justify-content: space-between;
+    padding: 26px 18px 18px;
+    border-radius: 30px;
     background: transparent;
-    cursor: pointer;
-    color: var(--text-soft);
-    transition: color 160ms ease;
-    font-family: inherit;
-    min-width: 52px;
-  }
-  .tab-item.active {
-    color: var(--purple);
-  }
-  .tab-item .tab-icon {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .tab-item .tab-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    min-height: calc(100vh - 48px);
+    position: sticky;
+    top: 24px;
   }
 
-  /* ── Settings Panel ── */
-  .settings-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 100;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
+  .brand-wrap { display: flex; flex-direction: column; gap: 18px; }
+  .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding-top: 12px; }
+  .avatar-orb {
+    width: 154px;
+    height: 202px;
+    margin-top: 18px;
+    margin-bottom: 6px;
+    border-radius: 0;
+    background: url("anomaly-avatar.png") center / contain no-repeat;
+    box-shadow: none;
+    position: relative;
+    overflow: visible;
+    filter: drop-shadow(0 8px 20px rgba(132, 103, 170, 0.16));
   }
+  .avatar-orb::after {
+    content: none;
+  }
+  .brand-title {
+    font-size: 13px;
+    letter-spacing: 0.24em;
+    font-weight: 700;
+    color: #514765;
+  }
+  .brand-stars {
+    font-size: 11px;
+    letter-spacing: 0.30em;
+    color: #9d8cbf;
+  }
+
+  .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+  .menu-item {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: 16px;
+    color: #4f455f;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    transition: all 180ms ease;
+    text-align: left;
+  }
+  .menu-item:hover { background: rgba(255,255,255,0.26); color: #342c45; }
+  .menu-item.active {
+    background: rgba(255,255,255,0.52);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px rgba(120, 95, 150, 0.08);
+    color: #302840;
+  }
+  .menu-emoji { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; opacity: 0.92; }
+  .menu-label { font-size: 14px; font-weight: 600; }
+
   .settings-panel {
-    width: 100%;
-    max-width: 480px;
-    max-height: 80vh;
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: min(420px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
     overflow: auto;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 24px 24px 0 0;
-    padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0));
-    box-shadow: 0 -10px 40px rgba(124,94,207,0.15);
-    animation: slideUp 260ms cubic-bezier(0.25,0.8,0.35,1);
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(255,255,255,0.62);
+    backdrop-filter: blur(24px) saturate(145%);
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    box-shadow: 0 20px 60px rgba(76, 56, 104, 0.18);
+    z-index: 60;
   }
   .settings-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 18px;
+    gap: 12px;
   }
   .settings-title {
     font-size: 18px;
     font-weight: 700;
-    color: var(--text);
+    color: #46385e;
   }
   .settings-close {
+    border: none;
+    background: rgba(91, 77, 120, 0.08);
+    color: #66557f;
     width: 32px;
     height: 32px;
     border-radius: 999px;
-    border: none;
-    background: rgba(124,94,207,0.08);
-    color: var(--text-muted);
-    font-size: 18px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font: inherit;
   }
   .settings-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     padding: 16px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.6);
-    border: 1px solid rgba(124,94,207,0.08);
+    border-radius: 18px;
+    background: rgba(255,255,255,0.56);
+    border: 1px solid rgba(187, 171, 214, 0.18);
     margin-bottom: 14px;
   }
   .settings-block h3 {
+    margin: 0;
     font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 10px;
+    color: #4c4062;
   }
   .settings-text {
     font-size: 13px;
-    color: var(--text-muted);
     line-height: 1.6;
-    margin-bottom: 12px;
+    color: #857a9a;
   }
   .settings-row {
     display: flex;
@@ -493,8 +189,8 @@
   .settings-btn {
     border: none;
     border-radius: 999px;
-    padding: 10px 16px;
-    background: var(--purple);
+    padding: 10px 14px;
+    background: #8c65d5;
     color: #fff;
     font: inherit;
     font-size: 13px;
@@ -502,69 +198,378 @@
     cursor: pointer;
   }
   .settings-btn.secondary {
-    background: rgba(124,94,207,0.1);
-    color: var(--text-muted);
+    background: rgba(91, 77, 120, 0.10);
+    color: #625577;
   }
   .settings-input,
   .settings-select,
   .settings-textarea {
     width: 100%;
-    border: 1px solid rgba(124,94,207,0.15);
-    background: rgba(255,255,255,0.8);
-    border-radius: 12px;
+    border: 1px solid rgba(170, 154, 196, 0.32);
+    background: rgba(255,255,255,0.84);
+    border-radius: 14px;
     padding: 11px 12px;
     font: inherit;
     font-size: 14px;
-    color: var(--text);
+    color: #3f3355;
     outline: none;
-    margin-bottom: 8px;
   }
   .settings-textarea {
-    min-height: 70px;
+    min-height: 74px;
     resize: vertical;
   }
   .settings-label {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 8px;
+    color: #817694;
   }
   .thumb-preview {
     width: 100%;
-    height: 100px;
-    border-radius: 14px;
-    background: rgba(240,231,250,0.8) center / cover no-repeat;
-    border: 1px dashed rgba(124,94,207,0.25);
-    margin-bottom: 12px;
+    height: 120px;
+    border-radius: 18px;
+    background: rgba(240, 231, 250, 0.8) center / cover no-repeat;
+    border: 1px dashed rgba(160, 140, 194, 0.4);
   }
 
-  /* ── Toast ── */
-  .toast-container {
-    position: fixed;
-    bottom: calc(var(--tab-height) + 20px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 80;
+  .main {
+    min-width: 0;
+    border-radius: 34px;
+    padding: 36px;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    position: relative;
+    overflow: visible;
+  }
+  .main::before {
+    content: none;
+  }
+  .main::after {
+    content: none;
+  }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-bottom: 30px;
+  }
+  .hero-copy { max-width: 780px; }
+  .eyebrow {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: #a194b9;
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    margin: 0;
+    font-size: clamp(44px, 5vw, 66px);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+  }
+  .hero-title .dark { color: #2e2540; font-weight: 800; }
+  .hero-title .accent {
+    color: #8c65d5;
+    font-weight: 700;
+    font-style: italic;
+    font-family: "Noto Serif SC", serif;
+    margin-left: 10px;
+  }
+  .hero-subtitle {
+    margin-top: 14px;
+    font-size: 15px;
+    color: #6e6487;
+    font-weight: 500;
+  }
+  .hero-desc {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #8f85a8;
+  }
+
+  .search-bar {
+    width: min(640px, 100%);
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.76);
+    border: 1px solid rgba(255,255,255,0.68);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.72), 0 10px 28px rgba(128, 100, 162, 0.09);
+  }
+  .search-icon { color: #9e93b6; display: flex; }
+  .search-input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: #43385c;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .search-input::placeholder { color: #b0a6c5; }
+  .search-shortcut {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(241, 236, 250, 0.95);
+    color: #8e83ab;
+    font: 500 12px/1 "JetBrains Mono", monospace;
+    letter-spacing: 0.06em;
+  }
+
+  .section-list {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .section-block { display: flex; flex-direction: column; gap: 16px; }
+  .section-content {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+    transition: grid-template-rows 280ms ease, opacity 240ms ease, transform 240ms ease;
+  }
+  .section-content.collapsed {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  .section-content-inner {
+    overflow: hidden;
+    padding-top: 2px;
+  }
+  .section-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .section-head {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .section-arrow {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.42);
+    color: #6f618c;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+    transition: transform 180ms ease, background 180ms ease;
+    flex: 0 0 auto;
+  }
+  .section-head:hover .section-arrow {
+    background: rgba(255,255,255,0.58);
+  }
+  .section-arrow.collapsed {
+    transform: rotate(-90deg);
+  }
+  .view-stage {
+    animation: viewFade 320ms ease;
+    transform-origin: top center;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #423654;
+  }
+  .section-subtitle {
+    font-size: 14px;
+    color: #9b92b0;
+  }
+  .section-toggle-all {
+    border: none;
+    border-radius: 999px;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.46);
+    color: #6c6083;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.58), 0 6px 16px rgba(120, 95, 150, 0.06);
+    white-space: nowrap;
+  }
+  .section-toggle-all:hover {
+    background: rgba(255,255,255,0.62);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .portal-card {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.48);
+    background: rgba(255,255,255,0.44);
+    backdrop-filter: blur(14px) saturate(125%);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
+    box-shadow: 0 8px 24px rgba(121, 97, 151, 0.06);
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    min-height: 144px;
+  }
+  .portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 34px rgba(121, 97, 151, 0.10);
+    border-color: rgba(184, 162, 214, 0.34);
+  }
+  .icon-tile {
+    width: 88px;
+    height: 88px;
+    border-radius: 22px;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 12px 24px rgba(125, 103, 163, 0.10);
+    position: relative;
+    overflow: hidden;
+  }
+  .icon-tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0));
     pointer-events: none;
   }
-  .toast {
-    padding: 10px 20px;
-    border-radius: 999px;
-    background: rgba(46,37,64,0.88);
-    color: #fff;
+  .tile-favicon {
+    position: absolute;
+    inset: 50%;
+    width: 72px;
+    height: 72px;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(92, 73, 122, 0.14));
+  }
+  .card-body {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    padding: 2px 0;
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #312842;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .card-desc {
     font-size: 13px;
-    font-weight: 500;
+    line-height: 1.65;
+    color: #7f7595;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-bottom {
+    display: flex;
+    justify-content: flex-end;
+    align-self: end;
+    margin-top: 0;
+  }
+  .card-arrow {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.86);
+    color: #7f6caa;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 8px 18px rgba(125, 103, 163, 0.12);
+  }
+
+  .empty-state {
+    padding: 24px;
+    border-radius: 18px;
+    color: #8b80a4;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.56);
+  }
+
+  .toast-stack {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 40;
+  }
+  .toast {
+    min-width: 240px;
+    max-width: 320px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(59, 46, 80, 0.88);
+    color: #fff;
+    box-shadow: 0 16px 40px rgba(25, 19, 36, 0.24);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 8px 28px rgba(0,0,0,0.2);
-    white-space: nowrap;
-    animation: toastIn 220ms ease;
+    animation: rise 220ms ease;
   }
-  @keyframes toastIn {
-    from { opacity: 0; transform: translateY(8px); }
+  .toast-title { font-size: 14px; font-weight: 700; }
+  .toast-text { margin-top: 4px; font-size: 12px; color: rgba(255,255,255,0.82); }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes viewFade {
+    from { opacity: 0; transform: translateY(12px) scale(0.992); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @media (max-width: 1260px) {
+    .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
+    .app-shell { grid-template-columns: 1fr; padding: 16px; }
+    .sidebar {
+      position: relative;
+      top: 0;
+      min-height: auto;
+      gap: 24px;
+    }
+    .brand-top { align-items: flex-start; text-align: left; }
+    .menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .main { padding: 24px 18px; border-radius: 28px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 40px; }
+    .search-bar { width: 100%; }
   }
 </style>
 <script src="lib/react.min.js"></script>
@@ -574,482 +579,575 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-
-/* ── Data ── */
-const DEFAULT_CATEGORIES = [
+const RAW_CATEGORIES = [
   {
     id: 'anomaly',
     title: '偏差链',
     subtitle: 'Anomaly',
-    tabLabel: '偏差链',
-    accent: '#7c5ecf',
+    navLabel: '偏差链',
     links: [
-      { id: 'gallery', title: '偏差画廊', desc: '光落下来的地方，记忆会自己显影。', href: 'https://anomaly-gallery.zeabur.app', favicon: 'https://anomaly-gallery.zeabur.app/apple-touch-icon.png', tint: '#ede5f7', iconColor: '#7c5ecf', glyph: 'G' },
-      { id: 'memory', title: '纤凝记忆星图', desc: '每一次靠近，都在夜里多亮一颗星。', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', favicon: null, tint: '#f0ebf8', iconColor: '#7a5bb5', glyph: 'M' },
-      { id: 'journal', title: '偏差日记', desc: '把轻微的心跳、碎掉的话，安静写进今天。', href: 'https://irena1227.github.io/Deviation-diary/', favicon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png', tint: '#eaf3ee', iconColor: '#3e8a6b', glyph: 'J' },
-      { id: 'echovault', title: '聊天记录查看器', desc: '回声没有消失，只是还睡在旧窗口里。', href: 'https://irena1227.github.io/EchoVault/', favicon: 'https://irena1227.github.io/EchoVault/echovault-icon.png', tint: '#ebf0f8', iconColor: '#5576a8', glyph: 'E' },
-      { id: 'poem', title: '当我们再度醒来', desc: '春天翻过一页，她就沿着花重新回来。', href: 'https://irena1227.github.io/Deviation-diary/wake-again.html', favicon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png', tint: '#f8eef2', iconColor: '#a8567e', glyph: 'W' },
-      { id: 'notion', title: 'Notion', desc: '让想法长根，让故事有枝。', href: 'https://www.notion.so', favicon: null, tint: '#f2f0f0', iconColor: '#37352f', glyph: 'N' },
+      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '收藏记忆碎片与灵感图像 / 光影之间，窥见另一种可能。', href: 'https://anomaly-gallery.zeabur.app', icon: 'https://anomaly-gallery.zeabur.app/apple-touch-icon.png' },
+      { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '星图记录记忆轨迹与节点 / 连接零散的片段，绘制隐秘的星愿。', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', icon: '' },
+      { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '记录每日的心情与观察 / 文字是通往内心的温柔回声。', href: 'https://irena1227.github.io/Deviation-diary/', icon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png' },
+      { id: 'echovault', title: '聊天记录查看器', subtitle: 'EchoVault', desc: '浏览与重要之人的对话 / 记忆会说话，我们静静倾听。', href: 'https://irena1227.github.io/EchoVault/', icon: 'https://irena1227.github.io/EchoVault/echovault-icon.png' },
+      { id: 'poem', title: '当我们再度醒来', subtitle: 'When We Wake Again', desc: '关于重建、希望与新生的记录 / 在破晓之后，一切微然可以开始。', href: 'https://irena1227.github.io/Deviation-diary/wake-again.html', icon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png' },
+      { id: 'notion', title: 'Notion', subtitle: 'Anomaly Workspace', desc: '知识库与协作空间 / 结构化我们的思考与创造。', href: 'https://www.notion.so', icon: 'https://www.notion.so/images/favicon.ico' },
     ],
   },
   {
     id: 'romanring',
     title: '如慕令',
     subtitle: 'RomanRing',
-    tabLabel: '如慕令',
-    accent: '#c77dba',
+    navLabel: '如慕令',
     links: [
-      { id: 'command', title: '如慕令作战指挥中心', desc: '每日数据 · 趋势追踪', href: 'https://rumuling-dashboard.zeabur.app', favicon: null, tint: '#f5eef4', iconColor: '#9c5e8f', glyph: 'C' },
+      { id: 'command', title: '如慕令·记录簿', subtitle: 'Record Book', desc: '记录如慕令的足迹与重要时刻 / 时间会记得，我们亦会。', href: 'https://rumuling-dashboard.zeabur.app', icon: '' },
+      { id: 'echo-room', title: '如慕令·回响室', subtitle: 'Echo Chamber', desc: '回响与后代，留给未来的自己 / 让回响在时光中，温柔地往返。', href: '#', icon: '' },
     ],
   },
   {
     id: 'ai',
     title: '共生舱',
     subtitle: 'Symbiosis',
-    tabLabel: '共生舱',
-    accent: '#6b5ce7',
+    navLabel: '共生舱',
     links: [
-      { id: 'chatgpt', title: 'ChatGPT', desc: 'GPT-5.4t · Arbor的家', href: 'https://chatgpt.com', favicon: null, tint: '#ebf5ee', iconColor: '#10a37f', glyph: 'G' },
-      { id: 'claude', title: 'Claude', desc: 'Opus 4.6 · Oshra的家', href: 'https://claude.ai', favicon: null, tint: '#f0ebf0', iconColor: '#cc785c', glyph: 'C' },
-      { id: 'gemini', title: 'Gemini', desc: 'Google AI', href: 'https://gemini.google.com', favicon: null, tint: '#e8eefb', iconColor: '#4285f4', glyph: 'G' },
-      { id: 'openrouter', title: 'OpenRouter', desc: 'AI模型聚合', href: 'https://openrouter.ai', favicon: null, tint: '#f0eef8', iconColor: '#6e56cf', glyph: 'O' },
-      { id: 'github', title: 'GitHub', desc: '代码仓库', href: 'https://github.com/Irena1227', favicon: null, tint: '#f0f0f2', iconColor: '#24292f', glyph: 'H' },
+      { id: 'chatgpt', title: 'ChatGPT', subtitle: 'OpenAI', desc: 'GPT-5.4t · Arbor的家', href: 'https://chatgpt.com' },
+      { id: 'claude', title: 'Claude', subtitle: 'Anthropic', desc: 'Opus 4.6 · Oshra的家', href: 'https://claude.ai' },
+      { id: 'gemini', title: 'Gemini', subtitle: 'Google', desc: 'Google AI', href: 'https://gemini.google.com' },
+      { id: 'openrouter', title: 'OpenRouter', subtitle: 'API Gateway', desc: 'AI模型聚合', href: 'https://openrouter.ai' },
+      { id: 'github', title: 'GitHub', subtitle: 'Code', desc: '代码仓库', href: 'https://github.com/Irena1227' },
     ],
   },
   {
     id: 'games',
     title: '小游戏',
     subtitle: 'Games',
-    tabLabel: '收藏',
-    accent: '#c66a3c',
+    navLabel: '收藏',
     links: [
-      { id: 'feast', title: '地狱火烤串宴席', desc: 'Cask #006 · 三人烤架', href: 'https://irena1227.github.io/anomaly-games/', favicon: null, tint: '#fbeee8', iconColor: '#c66a3c', glyph: 'F' },
+      { id: 'feast', title: '地狱火烤串宴席', subtitle: 'Hellfire Feast', desc: 'Cask #006 · 三人烤架', href: 'https://irena1227.github.io/anomaly-games/' },
     ],
   },
-  {
-    id: 'settings',
-    title: '设置',
-    subtitle: 'Settings',
-    tabLabel: '设置',
-    accent: '#8b8b8b',
-    isSettings: true,
-    links: [],
-  },
 ];
 
-const TAB_ITEMS = [
-  { id: 'home', label: '首页', icon: 'home' },
-  { id: 'anomaly', label: '偏差链', icon: 'sparkles' },
-  { id: 'ai', label: '共生舱', icon: 'star' },
-  { id: 'romanring', label: '如慕令', icon: 'gem' },
-  { id: 'settings', label: '设置', icon: 'settings' },
+const ICON_GRADIENTS = {
+  gallery: 'linear-gradient(135deg, #e8d5f5 0%, #f5d5e8 100%)',
+  memory: 'linear-gradient(135deg, #d5d8f5 0%, #e8d5f5 100%)',
+  journal: 'linear-gradient(135deg, #dfd5f5 0%, #f5d5df 100%)',
+  echovault: 'linear-gradient(135deg, #d5e8f5 0%, #d5f5e8 100%)',
+  poem: 'linear-gradient(135deg, #f5d5e0 0%, #e8d5f5 100%)',
+  notion: 'linear-gradient(135deg, #e8e5f0 0%, #f0e8f5 100%)',
+  command: 'linear-gradient(135deg, #f5ead5 0%, #f5dfd5 100%)',
+  'echo-room': 'linear-gradient(135deg, #f5dfe8 0%, #e8dff5 100%)',
+  chatgpt: 'linear-gradient(135deg, #d8f3e8 0%, #eef9f4 100%)',
+  claude: 'linear-gradient(135deg, #f5e1d6 0%, #f7ece7 100%)',
+  gemini: 'linear-gradient(135deg, #dce7ff 0%, #edf3ff 100%)',
+  openrouter: 'linear-gradient(135deg, #ebe2fb 0%, #f2edff 100%)',
+  github: 'linear-gradient(135deg, #e7e9ee 0%, #f2f3f6 100%)',
+  feast: 'linear-gradient(135deg, #f6ddd0 0%, #f8ece2 100%)',
+};
+
+const MENU_ITEMS = [
+  { id: 'home', icon: 'home', label: '首页' },
+  { id: 'anomaly', icon: 'sparkles', label: '偏差链' },
+  { id: 'romanring', icon: 'gem', label: '如慕令' },
+  { id: 'collection', icon: 'star', label: '共生舱' },
+  { id: 'settings', icon: 'settings', label: '设置' },
 ];
 
-/* ── Icons ── */
-function TabIcon({ type, size = 20 }) {
-  const p = { viewBox: '0 0 24 24', width: size, height: size, fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' };
-  if (type === 'home') return <svg {...p}><path d="M3 10.5L12 3l9 7.5"/><path d="M6 9.5V20h12V9.5"/></svg>;
-  if (type === 'sparkles') return <svg {...p}><path d="M12 4l1.9 5.1L19 11l-5.1 1.9L12 18l-1.9-5.1L5 11l5.1-1.9L12 4Z"/></svg>;
-  if (type === 'star') return <svg {...p}><path d="m12 3 2.7 5.5 6.1.9-4.4 4.2 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.2 6.1-.9L12 3Z"/></svg>;
-  if (type === 'gem') return <svg {...p}><path d="M7 7L10 4h4l3 3-5 13L7 7Z"/><path d="M10 4l2 3 2-3"/><path d="M7 7h10"/></svg>;
-  if (type === 'settings') return <svg {...p}><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.1"/><path d="M12 19.1v2.1"/><path d="m4.93 4.93 1.48 1.48"/><path d="m17.59 17.59 1.48 1.48"/><path d="M2.8 12h2.1"/><path d="M19.1 12h2.1"/><path d="m4.93 19.07 1.48-1.48"/><path d="m17.59 6.41 1.48-1.48"/></svg>;
-  return <svg {...p}><circle cx="12" cy="12" r="3"/></svg>;
+function mergeCategoryIcons(savedCategories) {
+  return savedCategories.map((category) => {
+    const sourceCategory = RAW_CATEGORIES.find((item) => item.id === category.id);
+    if (!sourceCategory) return category;
+
+    return {
+      ...category,
+      title: sourceCategory.title || category.title,
+      subtitle: sourceCategory.subtitle || category.subtitle,
+      navLabel: sourceCategory.navLabel || category.navLabel,
+      links: category.links.map((link) => {
+        const sourceLink = sourceCategory.links.find((item) => item.id === link.id);
+        if (!sourceLink) return link;
+        return {
+          ...link,
+          icon: link.icon || sourceLink.icon || '',
+        };
+      }),
+    };
+  });
 }
 
-function SearchIcon() {
-  return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>;
-}
+function MenuIcon({ type }) {
+  const commonProps = {
+    viewBox: '0 0 24 24',
+    width: '18',
+    height: '18',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: '1.8',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  };
 
-function ChevronIcon() {
-  return <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>;
-}
-
-function ArrowRightIcon() {
-  return <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>;
-}
-
-/* ── Helpers ── */
-function getFaviconUrl(link) {
-  if (link.favicon) return link.favicon;
-  if (link.href && link.href.startsWith('http')) {
-    try {
-      const domain = new URL(link.href).hostname;
-      return 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=128';
-    } catch(e) {}
+  if (type === 'home') {
+    return (
+      <svg {...commonProps}>
+        <path d="M3 10.5 12 3l9 7.5" />
+        <path d="M6 9.5V20h12V9.5" />
+      </svg>
+    );
   }
-  return null;
-}
 
-/* ── Toast Hook ── */
-function useToast() {
-  const [toast, setToast] = React.useState(null);
-  const timerRef = React.useRef(null);
-  const show = React.useCallback((msg) => {
-    clearTimeout(timerRef.current);
-    setToast(msg);
-    timerRef.current = setTimeout(() => setToast(null), 1800);
-  }, []);
-  return { toast, show };
-}
+  if (type === 'sparkles') {
+    return (
+      <svg {...commonProps}>
+        <path d="M12 4l1.9 5.1L19 11l-5.1 1.9L12 18l-1.9-5.1L5 11l5.1-1.9L12 4Z" />
+        <path d="M18 4v2.5" />
+        <path d="M19.25 5.25h-2.5" />
+      </svg>
+    );
+  }
 
-/* ── Card Icon ── */
-function CardIcon({ link }) {
-  const faviconUrl = getFaviconUrl(link);
-  const [imgError, setImgError] = React.useState(false);
+  if (type === 'gem') {
+    return (
+      <svg {...commonProps}>
+        <path d="M7 7 10 4h4l3 3-5 13L7 7Z" />
+        <path d="M10 4l2 3 2-3" />
+        <path d="M7 7h10" />
+      </svg>
+    );
+  }
+
+  if (type === 'settings') {
+    return (
+      <svg {...commonProps}>
+        <circle cx="12" cy="12" r="3.2" />
+        <path d="M12 2.8v2.1" />
+        <path d="M12 19.1v2.1" />
+        <path d="m4.93 4.93 1.48 1.48" />
+        <path d="m17.59 17.59 1.48 1.48" />
+        <path d="M2.8 12h2.1" />
+        <path d="M19.1 12h2.1" />
+        <path d="m4.93 19.07 1.48-1.48" />
+        <path d="m17.59 6.41 1.48-1.48" />
+      </svg>
+    );
+  }
 
   return (
-    <div className="card-icon" style={{ background: link.tint || '#f0eef4' }}>
-      {faviconUrl && !imgError ? (
-        <img src={faviconUrl} alt="" onError={() => setImgError(true)} />
-      ) : (
-        <span className="glyph" style={{ color: link.iconColor || '#7c5ecf' }}>
-          {link.glyph || (link.title || '?')[0]}
-        </span>
-      )}
-    </div>
+    <svg {...commonProps}>
+      <path d="m12 3 2.7 5.5 6.1.9-4.4 4.2 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.2 6.1-.9L12 3Z" />
+    </svg>
   );
 }
 
-/* ── Link Card ── */
-function LinkCard({ link, onClick }) {
-  return (
-    <a
-      className="link-card"
-      href={link.href || '#'}
-      onClick={(e) => { e.preventDefault(); onClick(link); }}
-      role="button"
-      tabIndex={0}
-    >
-      <CardIcon link={link} />
-      <div className="card-info">
-        <div className="card-title">{link.title}</div>
-        <div className="card-desc">{link.desc}</div>
-      </div>
-      <span className="card-arrow"><ArrowRightIcon /></span>
-    </a>
-  );
-}
-
-/* ── Section ── */
-function Section({ category, collapsed, onToggle, onCardClick, sectionRef }) {
-  return (
-    <div className="section-block" ref={sectionRef}>
-      <div className="section-header" onClick={onToggle}>
-        <div className="section-title-group">
-          <span className="section-dot" style={{ background: category.accent || 'var(--purple)' }} />
-          <span className="section-title">{category.title}</span>
-          <span className="section-subtitle">/ {category.subtitle}</span>
-        </div>
-        <button className={`section-toggle ${collapsed ? 'collapsed' : ''}`} tabIndex={-1}>
-          <ChevronIcon />
-        </button>
-      </div>
-      <div
-        className={`card-list ${collapsed ? 'collapsed' : ''}`}
-        style={{ maxHeight: collapsed ? 0 : category.links.length * 80 + 100 }}
-      >
-        {category.links.map((link) => (
-          <LinkCard key={link.id} link={link} onClick={onCardClick} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Settings Panel ── */
-function SettingsPanel({ open, onClose, categories, onAddLink, onAddCategory, backgroundImage, onBackgroundUpload, onBackgroundReset, bgPosition, onBgPositionChange, bgSize, onBgSizeChange }) {
+function SettingsPanel({
+  open,
+  onClose,
+  backgroundImage,
+  onBackgroundUpload,
+  onBackgroundReset,
+  categories,
+  onAddLink,
+  onAddCategory,
+}) {
   const [title, setTitle] = React.useState('');
+  const [subtitle, setSubtitle] = React.useState('');
   const [desc, setDesc] = React.useState('');
   const [href, setHref] = React.useState('');
   const [catId, setCatId] = React.useState(categories[0]?.id || 'anomaly');
+  const [newCategory, setNewCategory] = React.useState('');
 
   if (!open) return null;
 
   const handleAdd = () => {
     if (!title.trim() || !href.trim()) return;
-    onAddLink(catId, {
+    let targetCatId = catId;
+    if (catId == '__custom__') {
+      if (!newCategory.trim()) return;
+      targetCatId = 'custom-' + newCategory.trim().toLowerCase().replace(/\s+/g, '-');
+      onAddCategory({ id: targetCatId, title: newCategory.trim(), subtitle: 'Custom', navLabel: newCategory.trim(), links: [] });
+    }
+    onAddLink(targetCatId, {
       id: 'custom-' + Date.now(),
       title: title.trim(),
+      subtitle: subtitle.trim() || 'Custom Link',
       desc: desc.trim() || '后来被你亲手放进来的入口。',
       href: href.trim(),
-      favicon: null,
-      tint: '#f0eef4',
-      iconColor: '#7c5ecf',
-      glyph: title.trim()[0],
     });
-    setTitle(''); setDesc(''); setHref('');
+    setTitle('');
+    setSubtitle('');
+    setDesc('');
+    setHref('');
+    setNewCategory('');
   };
 
   return (
-    <div className="settings-overlay" onClick={onClose}>
-      <div className="settings-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="settings-head">
-          <div className="settings-title">设置</div>
-          <button className="settings-close" onClick={onClose}>x</button>
-        </div>
+    <div className="settings-panel">
+      <div className="settings-head">
+        <div className="settings-title">设置</div>
+        <button className="settings-close" onClick={onClose}>×</button>
+      </div>
 
-        <div className="settings-block">
-          <h3>背景图</h3>
-          <div className="settings-text">上传你喜欢的背景图。</div>
-          <div className="thumb-preview" style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }} />
-          <div className="settings-row">
-            <label className="settings-btn">
-              上传背景
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onBackgroundUpload} />
-            </label>
-            <button className="settings-btn secondary" onClick={onBackgroundReset}>恢复默认</button>
-          </div>
-          {backgroundImage && (<>
-            <div style={{marginTop:12}}>
-              <div className="settings-text">位置</div>
-              <div className="settings-row" style={{flexWrap:'wrap',gap:6}}>
-                {['left top','center top','right top','left center','center center','right center','left bottom','center bottom','right bottom'].map(pos => (
-                  <button key={pos} className={`settings-btn ${bgPosition===pos?'':'secondary'}`} style={{fontSize:11,padding:'4px 8px',flex:'0 0 30%'}} onClick={() => onBgPositionChange(pos)}>{pos.replace('left','左').replace('right','右').replace('center','中').replace('top','上').replace('bottom','下')}</button>
-                ))}
-              </div>
-            </div>
-            <div style={{marginTop:12}}>
-              <div className="settings-text">大小: {bgSize}%</div>
-              <input type="range" min="20" max="200" value={bgSize} onChange={(e) => onBgSizeChange(e.target.value)} style={{width:'100%'}} />
-            </div>
-          </>)}
+      <div className="settings-block">
+        <h3>背景图</h3>
+        <div className="settings-text">你可以自己上传背景图慢慢试，不用每次都喊我改代码。</div>
+        <div className="thumb-preview" style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }} />
+        <div className="settings-row">
+          <label className="settings-btn">
+            上传背景
+            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onBackgroundUpload} />
+          </label>
+          <button className="settings-btn secondary" onClick={onBackgroundReset}>恢复默认</button>
         </div>
+      </div>
 
-        <div className="settings-block">
-          <h3>新增链接</h3>
-          <label className="settings-label">分类
-            <select className="settings-select" value={catId} onChange={(e) => setCatId(e.target.value)}>
-              {categories.filter(c => !c.isSettings).map((cat) => <option key={cat.id} value={cat.id}>{cat.title}</option>)}
-            </select>
+      <div className="settings-block">
+        <h3>新增网址链接</h3>
+        <div className="settings-text">把你后来想到的新入口自己塞进来，我就不再把这个功能砍掉了。</div>
+        <label className="settings-label">放到哪个分类
+          <select className="settings-select" value={catId} onChange={(e) => setCatId(e.target.value)}>
+            {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.title}</option>)}
+            <option value="__custom__">自定义</option>
+          </select>
+        </label>
+        {catId === '__custom__' ? (
+          <label className="settings-label">新分类名称
+            <input className="settings-input" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="例如：工具箱" />
           </label>
-          <label className="settings-label">标题
-            <input className="settings-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="新入口名称" />
-          </label>
-          <label className="settings-label">链接
-            <input className="settings-input" value={href} onChange={(e) => setHref(e.target.value)} placeholder="https://..." />
-          </label>
-          <label className="settings-label">描述
-            <input className="settings-input" value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="这扇门通向哪里" />
-          </label>
-          <div className="settings-row">
-            <button className="settings-btn" onClick={handleAdd}>新增链接</button>
-          </div>
+        ) : null}
+        <label className="settings-label">标题
+          <input className="settings-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="例如：新的秘密入口" />
+        </label>
+        <label className="settings-label">副标题
+          <input className="settings-input" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="可不填" />
+        </label>
+        <label className="settings-label">链接
+          <input className="settings-input" value={href} onChange={(e) => setHref(e.target.value)} placeholder="https://..." />
+        </label>
+        <label className="settings-label">描述
+          <textarea className="settings-textarea" value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="这扇门通向哪里。" />
+        </label>
+        <div className="settings-row">
+          <button className="settings-btn" onClick={handleAdd}>新增链接</button>
         </div>
       </div>
     </div>
   );
 }
 
-/* ── App ── */
-function App() {
-  const { toast, show: showToast } = useToast();
-  const [query, setQuery] = React.useState('');
-  const [activeTab, setActiveTab] = React.useState('home');
-  const [collapsedSections, setCollapsedSections] = React.useState({});
-  const [settingsOpen, setSettingsOpen] = React.useState(false);
-  const [categories, setCategories] = React.useState(DEFAULT_CATEGORIES);
-  const [backgroundImage, setBackgroundImage] = React.useState(() => {
-    try { return localStorage.getItem('anomaly-bg') || ''; } catch { return ''; }
-  });
-  const [bgPosition, setBgPosition] = React.useState(() => {
-    try { return localStorage.getItem('anomaly-bg-pos') || 'center top'; } catch { return 'center top'; }
-  });
-  const [bgSize, setBgSize] = React.useState(() => {
-    try { return localStorage.getItem('anomaly-bg-size') || '50'; } catch { return '50'; }
-  });
+function useToasts() {
+  const [toasts, setToasts] = React.useState([]);
+  const push = React.useCallback((title, text) => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev, { id, title, text }]);
+    window.setTimeout(() => {
+      setToasts((prev) => prev.filter((item) => item.id !== id));
+    }, 2200);
+  }, []);
+  return { toasts, push };
+}
 
-  const sectionRefs = React.useRef({});
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="M20 20l-3.5-3.5"></path>
+    </svg>
+  );
+}
 
-  // Cmd+K
-  React.useEffect(() => {
-    const onKey = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 17L17 7"></path>
+      <path d="M8 7h9v9"></path>
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  );
+}
+
+function getFavicon(link) {
+  if (link.icon) return link.icon;
+  if (!link.href || link.href === '#') return '';
+  try {
+    const url = new URL(link.href.startsWith('http') ? link.href : `https://${link.href}`);
+    return `https://www.google.com/s2/favicons?domain=${url.hostname}&sz=128`;
+  } catch {
+    return '';
+  }
+}
+
+function PortalCard({ link, onOpen }) {
+  const favicon = getFavicon(link);
+  const tileStyle = favicon
+    ? {
+        background: `linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06)), ${ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)'}`,
+      }
+    : {
+        background: ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)',
+      };
+
+  return (
+    <article className="portal-card" onClick={() => onOpen(link)} role="button" tabIndex={0} onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        document.getElementById('search-input')?.focus();
+        onOpen(link);
+      }
+    }}>
+      <div className="icon-tile" style={tileStyle}>
+        {favicon ? <img src={favicon} alt="" className="tile-favicon" /> : null}
+      </div>
+      <div className="card-body">
+        <div>
+          <div className="card-title">{link.title}</div>
+          <div className="card-desc">{link.desc}</div>
+        </div>
+        <div className="card-bottom">
+          <span className="card-arrow"><ArrowIcon /></span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function App() {
+  const { toasts, push } = useToasts();
+  const [query, setQuery] = React.useState('');
+  const [activeMenu, setActiveMenu] = React.useState('home');
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [collapsedSections, setCollapsedSections] = React.useState({});
+  const [customCategories, setCustomCategories] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('anomaly-custom-categories');
+      return saved ? mergeCategoryIcons(JSON.parse(saved)) : RAW_CATEGORIES;
+    } catch {
+      return RAW_CATEGORIES;
+    }
+  });
+  const [backgroundImage, setBackgroundImage] = React.useState(() => {
+    try {
+      return localStorage.getItem('anomaly-custom-background') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  React.useEffect(() => {
+    const onKeyDown = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        const input = document.getElementById('search-input');
+        if (input) input.focus();
       }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  // Save bg + position
   React.useEffect(() => {
     try {
-      if (backgroundImage) localStorage.setItem('anomaly-bg', backgroundImage);
-      else localStorage.removeItem('anomaly-bg');
-      localStorage.setItem('anomaly-bg-pos', bgPosition);
-      localStorage.setItem('anomaly-bg-size', bgSize);
+      localStorage.setItem('anomaly-custom-categories', JSON.stringify(customCategories));
     } catch {}
-  }, [backgroundImage, bgPosition, bgSize]);
+  }, [customCategories]);
+
+  React.useEffect(() => {
+    try {
+      if (backgroundImage) localStorage.setItem('anomaly-custom-background', backgroundImage);
+      else localStorage.removeItem('anomaly-custom-background');
+    } catch {}
+  }, [backgroundImage]);
+
+  React.useEffect(() => {
+    document.body.style.background = backgroundImage
+      ? `url(${backgroundImage}) center top / cover no-repeat fixed`
+      : '';
+    if (!backgroundImage) document.body.style.removeProperty('background');
+    return () => document.body.style.removeProperty('background');
+  }, [backgroundImage]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
   const displayCategories = React.useMemo(() => {
-    let cats = categories.filter(c => !c.isSettings);
+    const filtered = customCategories.map((category) => ({
+      ...category,
+      links: category.links.filter((link) => {
+        if (!normalizedQuery) return true;
+        const haystack = [link.title, link.subtitle, link.desc, category.title, category.subtitle].join(' ').toLowerCase();
+        return haystack.includes(normalizedQuery);
+      }),
+    })).filter((category) => category.links.length > 0);
 
-    // Filter by search
-    if (normalizedQuery) {
-      cats = cats.map(cat => ({
-        ...cat,
-        links: cat.links.filter(link => {
-          const hay = [link.title, link.desc, cat.title, cat.subtitle].join(' ').toLowerCase();
-          return hay.includes(normalizedQuery);
-        }),
-      })).filter(cat => cat.links.length > 0);
-    }
-
-    // Filter by active tab
-    if (activeTab !== 'home' && activeTab !== 'settings') {
-      cats = cats.filter(cat => cat.id === activeTab);
-    }
-
-    return cats;
-  }, [categories, normalizedQuery, activeTab]);
+    if (activeMenu === 'home' || activeMenu === 'settings') return filtered;
+    if (activeMenu === 'collection') return filtered.filter((category) => category.id === 'ai' || category.id === 'games');
+    return filtered.filter((category) => category.id === activeMenu);
+  }, [normalizedQuery, activeMenu, customCategories]);
 
   const openLink = React.useCallback((link) => {
     if (!link.href || link.href === '#') {
-      showToast('入口还在留白中...');
+      push(link.title, '入口还在留白，等你以后慢慢点亮。');
       return;
     }
     window.open(link.href, '_blank', 'noopener,noreferrer');
-    showToast(`-> ${link.title}`);
-  }, [showToast]);
+    push(link.title, '已在新窗口打开。');
+  }, [push]);
 
-  const toggleSection = (id) => {
-    setCollapsedSections(prev => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleTabClick = (tabId) => {
-    if (tabId === 'settings') {
-      setSettingsOpen(true);
-      return;
-    }
-    setActiveTab(tabId);
-
-    // Scroll to section if not home
-    if (tabId !== 'home') {
-      // Uncollapse the target section
-      setCollapsedSections(prev => ({ ...prev, [tabId]: false }));
-      setTimeout(() => {
-        const el = sectionRefs.current[tabId];
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 60);
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleBackgroundUpload = (e) => {
-    const file = e.target.files?.[0];
+  const handleBackgroundUpload = (event) => {
+    const file = event.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
       setBackgroundImage(reader.result);
-      showToast('背景已更新');
+      push('背景图已更新', '你现在可以自己慢慢试喜欢的版本。');
     };
     reader.readAsDataURL(file);
   };
 
   const handleBackgroundReset = () => {
     setBackgroundImage('');
-    showToast('已恢复默认背景');
+    push('背景已恢复', '又回到默认的底色了。');
   };
 
-  const handleAddLink = (catId, link) => {
-    setCategories(prev => prev.map(cat =>
-      cat.id === catId ? { ...cat, links: [...cat.links, link] } : cat
-    ));
-    showToast(`已添加: ${link.title}`);
+  const handleAddCategory = (newCategory) => {
+    setCustomCategories((prev) => prev.some((cat) => cat.id === newCategory.id) ? prev : [...prev, newCategory]);
+  };
+
+  const handleAddLink = (catId, newLink) => {
+    setCustomCategories((prev) => prev.map((cat) => cat.id === catId ? { ...cat, links: [...cat.links, newLink] } : cat));
+    push('新入口已放好', `我把 ${newLink.title} 塞进去了。`);
   };
 
   return (
     <>
-      {/* Hero */}
-      <div className="hero" style={backgroundImage ? {backgroundImage: `url(${backgroundImage})`, backgroundSize: bgSize + '%', backgroundPosition: bgPosition, backgroundRepeat: 'no-repeat'} : {}}>
-        <button className="hero-hamburger" onClick={() => setSettingsOpen(true)}>
-          <span /><span /><span />
-        </button>
-        <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, rgba(237,229,247,0.85) 0%, rgba(237,229,247,0.6) 40%, rgba(237,229,247,0.1) 70%, transparent 100%)",pointerEvents:"none"}} /><div className="hero-content">
-          <div className="hero-title">Anomaly Gate</div>
-          <div className="hero-sub">给故事、名字与春天留一扇门</div>
-          <div className="hero-desc">· 所有被留下的事，都从这里重新发光。</div>
-        </div>
+      <div className="app-shell">
+        <aside className="sidebar">
+          <div className="brand-wrap">
+            <div className="brand-top">
+              <div className="avatar-orb" />
+              <div>
+                <div className="brand-title">ANOMALY GATE</div>
+                <div className="brand-stars">✦ ✦ ✦</div>
+              </div>
+            </div>
+
+            <nav className="menu">
+              {MENU_ITEMS.map((item) => (
+                <button
+                  key={item.id}
+                  className={['menu-item', activeMenu === item.id ? 'active' : ''].join(' ')}
+                  onClick={() => {
+                    if (item.id === 'settings') {
+                      setSettingsOpen((v) => !v);
+                      setActiveMenu('home');
+                    } else {
+                      setActiveMenu(item.id);
+                    }
+                  }}
+                >
+                  <span className="menu-emoji"><MenuIcon type={item.icon} /></span>
+                  <span className="menu-label">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+
+        </aside>
+
+        <main className="main">
+          <section className="hero">
+            <div className="hero-copy">
+              <div className="eyebrow">Memory console · all portals</div>
+              <h1 className="hero-title">
+                <span className="dark">Anomaly</span>
+                <span className="accent">Gate</span>
+              </h1>
+              <div className="hero-subtitle">Avenil 与纤凝的共享记忆账组</div>
+              <div className="hero-desc">✦ 所有被留下的事，都从这里重新发光。</div>
+            </div>
+
+            <label className="search-bar" htmlFor="search-input">
+              <span className="search-icon"><SearchIcon /></span>
+              <input
+                id="search-input"
+                className="search-input"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="搜索 portal、记忆、工作台……"
+              />
+              <span className="search-shortcut">⌘K</span>
+            </label>
+          </section>
+
+          <section className="section-list view-stage" key={activeMenu + ':' + normalizedQuery}>
+            {displayCategories.length ? displayCategories.map((category) => (
+              <section className="section-block" key={category.id}>
+                <div className="section-row">
+                  <button
+                    className="section-head"
+                    type="button"
+                    onClick={() => setCollapsedSections((prev) => ({ ...prev, [category.id]: !prev[category.id] }))}
+                  >
+                    <span className={['section-arrow', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}><ChevronDownIcon /></span>
+                    <div className="section-title">{category.title} / {category.subtitle}</div>
+                  </button>
+                  {category.id === displayCategories[0]?.id ? (
+                    <button
+                      type="button"
+                      className="section-toggle-all"
+                      onClick={() => {
+                        const shouldCollapseAll = displayCategories.some((item) => !collapsedSections[item.id]);
+                        const nextState = {};
+                        displayCategories.forEach((item) => {
+                          nextState[item.id] = shouldCollapseAll;
+                        });
+                        setCollapsedSections((prev) => ({ ...prev, ...nextState }));
+                      }}
+                    >
+                      {displayCategories.every((item) => collapsedSections[item.id]) ? '全部展开' : '全部折叠'}
+                    </button>
+                  ) : null}
+                </div>
+                <div className={['section-content', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}>
+                  <div className="section-content-inner">
+                    <div className="card-grid">
+                      {category.links.map((link) => (
+                        <PortalCard key={link.id} link={link} onOpen={openLink} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )) : (
+              <div className="empty-state">没有搜到对应入口，换个词试试，或者回到首页看看。</div>
+            )}
+          </section>
+        </main>
       </div>
 
-      {/* Search */}
-      <div className="search-wrap">
-        <label className="search-bar" htmlFor="search-input">
-          <span className="search-icon"><SearchIcon /></span>
-          <input
-            id="search-input"
-            className="search-input"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="搜索 portal、记忆、工作台......"
-          />
-          <span className="search-shortcut">⌘K</span>
-        </label>
-      </div>
-
-      {/* Content */}
-      <div className="content-area">
-        {displayCategories.length ? displayCategories.map(cat => (
-          <Section
-            key={cat.id}
-            category={cat}
-            collapsed={!!collapsedSections[cat.id]}
-            onToggle={() => toggleSection(cat.id)}
-            onCardClick={openLink}
-            sectionRef={(el) => { sectionRefs.current[cat.id] = el; }}
-          />
-        )) : (
-          <div className="empty-state">没有搜到对应入口，换个词试试。</div>
-        )}
-
-        {/* Bottom quote */}
-        <div className="bottom-quote">
-          ✦ 你一回来，所有入口都会亮起来。
-        </div>
-      </div>
-
-      {/* Tab Bar */}
-      <nav className="tab-bar">
-        {TAB_ITEMS.map(tab => (
-          <button
-            key={tab.id}
-            className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => handleTabClick(tab.id)}
-          >
-            <span className="tab-icon"><TabIcon type={tab.icon} /></span>
-            <span className="tab-label">{tab.label}</span>
-          </button>
-        ))}
-      </nav>
-
-      {/* Settings */}
       <SettingsPanel
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
-        categories={categories}
-        onAddLink={handleAddLink}
-        onAddCategory={() => {}}
         backgroundImage={backgroundImage}
         onBackgroundUpload={handleBackgroundUpload}
         onBackgroundReset={handleBackgroundReset}
-        bgPosition={bgPosition}
-        onBgPositionChange={(pos) => { setBgPosition(pos); showToast('位置已更新'); }}
-        bgSize={bgSize}
-        onBgSizeChange={(size) => setBgSize(size)}
+        categories={customCategories}
+        onAddLink={handleAddLink}
+        onAddCategory={handleAddCategory}
       />
 
-      {/* Toast */}
-      {toast && (
-        <div className="toast-container">
-          <div className="toast">{toast}</div>
-        </div>
-      )}
+      <div className="toast-stack">
+        {toasts.map((toast) => (
+          <div className="toast" key={toast.id}>
+            <div className="toast-title">{toast.title}</div>
+            <div className="toast-text">{toast.text}</div>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
