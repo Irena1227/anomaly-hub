@@ -392,7 +392,17 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.36), rgba(255,255,255,0));
+    background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+  .tile-favicon {
+    position: absolute;
+    inset: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    filter: drop-shadow(0 3px 8px rgba(92, 73, 122, 0.12));
   }
   .card-body {
     min-width: 0;
@@ -771,6 +781,14 @@ function getFavicon(link) {
 
 function PortalCard({ link, onOpen }) {
   const favicon = getFavicon(link);
+  const tileStyle = favicon
+    ? {
+        background: `linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06)), ${ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)'}`,
+      }
+    : {
+        background: ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)',
+      };
+
   return (
     <article className="portal-card" onClick={() => onOpen(link)} role="button" tabIndex={0} onKeyDown={(e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -778,7 +796,9 @@ function PortalCard({ link, onOpen }) {
         onOpen(link);
       }
     }}>
-      <div className="icon-tile" style={{ backgroundImage: favicon ? `linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02)), url(${favicon})` : '', background: favicon ? undefined : (ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)') }} />
+      <div className="icon-tile" style={tileStyle}>
+        {favicon ? <img src={favicon} alt="" className="tile-favicon" /> : null}
+      </div>
       <div className="card-body">
         <div>
           <div className="card-title">{link.title}</div>
