@@ -69,30 +69,32 @@
     top: 24px;
   }
 
-  .brand-wrap { display: flex; flex-direction: column; gap: 26px; }
-  .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+  .brand-wrap { display: flex; flex-direction: column; gap: 22px; }
+  .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
   .avatar-orb {
-    width: 110px;
-    height: 150px;
+    width: 128px;
+    height: 168px;
+    margin-bottom: -10px;
     border-radius: 0;
     background: url("anomaly-avatar.png") center / contain no-repeat;
     box-shadow: none;
     position: relative;
     overflow: visible;
+    filter: drop-shadow(0 8px 20px rgba(132, 103, 170, 0.16));
   }
   .avatar-orb::after {
     content: none;
   }
   .brand-title {
-    font-size: 14px;
-    letter-spacing: 0.28em;
+    font-size: 13px;
+    letter-spacing: 0.24em;
     font-weight: 700;
-    color: #5c5477;
+    color: #514765;
   }
   .brand-stars {
-    font-size: 12px;
-    letter-spacing: 0.35em;
-    color: #b09acf;
+    font-size: 11px;
+    letter-spacing: 0.30em;
+    color: #9d8cbf;
   }
 
   .menu { display: flex; flex-direction: column; gap: 8px; }
@@ -102,7 +104,7 @@
     gap: 12px;
     padding: 13px 14px;
     border-radius: 16px;
-    color: #665d7d;
+    color: #4f455f;
     background: transparent;
     border: 0;
     font: inherit;
@@ -110,13 +112,13 @@
     transition: all 180ms ease;
     text-align: left;
   }
-  .menu-item:hover { background: rgba(255,255,255,0.42); color: #463d60; }
+  .menu-item:hover { background: rgba(255,255,255,0.26); color: #342c45; }
   .menu-item.active {
-    background: rgba(255,255,255,0.68);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 20px rgba(120, 95, 150, 0.10);
-    color: #463d60;
+    background: rgba(255,255,255,0.52);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px rgba(120, 95, 150, 0.08);
+    color: #302840;
   }
-  .menu-emoji { width: 22px; text-align: center; font-size: 16px; }
+  .menu-emoji { width: 22px; text-align: center; font-size: 16px; opacity: 0.92; }
   .menu-label { font-size: 14px; font-weight: 600; }
 
   .settings-panel {
@@ -373,19 +375,19 @@
     align-items: center;
     padding: 18px;
     border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.64);
-    background: rgba(255,255,255,0.62);
-    backdrop-filter: blur(20px) saturate(145%);
-    -webkit-backdrop-filter: blur(20px) saturate(145%);
-    box-shadow: 0 10px 30px rgba(121, 97, 151, 0.08);
+    border: 1px solid rgba(255,255,255,0.48);
+    background: rgba(255,255,255,0.44);
+    backdrop-filter: blur(14px) saturate(125%);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
+    box-shadow: 0 8px 24px rgba(121, 97, 151, 0.06);
     cursor: pointer;
     transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
     min-height: 144px;
   }
   .portal-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(184, 162, 214, 0.45);
+    box-shadow: 0 16px 34px rgba(121, 97, 151, 0.10);
+    border-color: rgba(184, 162, 214, 0.34);
   }
   .icon-tile {
     width: 80px;
@@ -412,13 +414,13 @@
   .card-title {
     font-size: 17px;
     font-weight: 700;
-    color: #3d3352;
+    color: #312842;
     letter-spacing: -0.02em;
   }
   .card-desc {
     font-size: 13px;
     line-height: 1.65;
-    color: #9389aa;
+    color: #7f7595;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
