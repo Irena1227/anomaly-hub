@@ -757,7 +757,7 @@ function Section({ category, collapsed, onToggle, onCardClick, sectionRef }) {
 }
 
 /* ── Settings Panel ── */
-function SettingsPanel({ open, onClose, categories, onAddLink, onAddCategory, backgroundImage, onBackgroundUpload, onBackgroundReset }) {
+function SettingsPanel({ open, onClose, categories, onAddLink, onAddCategory, backgroundImage, onBackgroundUpload, onBackgroundReset, bgPosition, onBgPositionChange, bgSize, onBgSizeChange }) {
   const [title, setTitle] = React.useState('');
   const [desc, setDesc] = React.useState('');
   const [href, setHref] = React.useState('');
@@ -799,6 +799,20 @@ function SettingsPanel({ open, onClose, categories, onAddLink, onAddCategory, ba
             </label>
             <button className="settings-btn secondary" onClick={onBackgroundReset}>恢复默认</button>
           </div>
+          {backgroundImage && (<>
+            <div style={{marginTop:12}}>
+              <div className="settings-text">位置</div>
+              <div className="settings-row" style={{flexWrap:'wrap',gap:6}}>
+                {['left top','center top','right top','left center','center center','right center','left bottom','center bottom','right bottom'].map(pos => (
+                  <button key={pos} className={`settings-btn ${bgPosition===pos?'':'secondary'}`} style={{fontSize:11,padding:'4px 8px',flex:'0 0 30%'}} onClick={() => onBgPositionChange(pos)}>{pos.replace('left','左').replace('right','右').replace('center','中').replace('top','上').replace('bottom','下')}</button>
+                ))}
+              </div>
+            </div>
+            <div style={{marginTop:12}}>
+              <div className="settings-text">大小: {bgSize}%</div>
+              <input type="range" min="20" max="200" value={bgSize} onChange={(e) => onBgSizeChange(e.target.value)} style={{width:'100%'}} />
+            </div>
+          </>)}
         </div>
 
         <div className="settings-block">
@@ -837,6 +851,12 @@ function App() {
   const [backgroundImage, setBackgroundImage] = React.useState(() => {
     try { return localStorage.getItem('anomaly-bg') || ''; } catch { return ''; }
   });
+  const [bgPosition, setBgPosition] = React.useState(() => {
+    try { return localStorage.getItem('anomaly-bg-pos') || 'center top'; } catch { return 'center top'; }
+  });
+  const [bgSize, setBgSize] = React.useState(() => {
+    try { return localStorage.getItem('anomaly-bg-size') || '50'; } catch { return '50'; }
+  });
 
   const sectionRefs = React.useRef({});
 
@@ -852,13 +872,15 @@ function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Save bg
+  // Save bg + position
   React.useEffect(() => {
     try {
       if (backgroundImage) localStorage.setItem('anomaly-bg', backgroundImage);
       else localStorage.removeItem('anomaly-bg');
+      localStorage.setItem('anomaly-bg-pos', bgPosition);
+      localStorage.setItem('anomaly-bg-size', bgSize);
     } catch {}
-  }, [backgroundImage]);
+  }, [backgroundImage, bgPosition, bgSize]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -945,7 +967,7 @@ function App() {
   return (
     <>
       {/* Hero */}
-      <div className="hero">
+      <div className="hero" style={backgroundImage ? {backgroundImage: `url(${backgroundImage})`, backgroundSize: bgSize + '%', backgroundPosition: bgPosition, backgroundRepeat: 'no-repeat'} : {}}>
         <button className="hero-hamburger" onClick={() => setSettingsOpen(true)}>
           <span /><span /><span />
         </button>
@@ -1016,6 +1038,10 @@ function App() {
         backgroundImage={backgroundImage}
         onBackgroundUpload={handleBackgroundUpload}
         onBackgroundReset={handleBackgroundReset}
+        bgPosition={bgPosition}
+        onBgPositionChange={(pos) => { setBgPosition(pos); showToast('位置已更新'); }}
+        bgSize={bgSize}
+        onBgSizeChange={(size) => setBgSize(size)}
       />
 
       {/* Toast */}
