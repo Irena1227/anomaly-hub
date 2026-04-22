@@ -513,12 +513,12 @@ const RAW_CATEGORIES = [
     subtitle: 'Anomaly',
     navLabel: '偏差链',
     links: [
-      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '收藏记忆碎片与灵感图像 / 光影之间，窥见另一种可能。', href: 'https://anomaly-gallery.zeabur.app' },
-      { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '星图记录记忆轨迹与节点 / 连接零散的片段，绘制隐秘的星愿。', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM' },
-      { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '记录每日的心情与观察 / 文字是通往内心的温柔回声。', href: 'https://irena1227.github.io/Deviation-diary/' },
-      { id: 'echovault', title: '聊天记录查看器', subtitle: 'EchoVault', desc: '浏览与重要之人的对话 / 记忆会说话，我们静静倾听。', href: 'https://irena1227.github.io/EchoVault/' },
-      { id: 'poem', title: '当我们再度醒来', subtitle: 'When We Wake Again', desc: '关于重建、希望与新生的记录 / 在破晓之后，一切微然可以开始。', href: 'https://irena1227.github.io/Deviation-diary/wake-again.html' },
-      { id: 'notion', title: 'Notion', subtitle: 'Anomaly Workspace', desc: '知识库与协作空间 / 结构化我们的思考与创造。', href: 'https://www.notion.so' },
+      { id: 'gallery', title: '偏差画廊', subtitle: 'Anomaly Gallery', desc: '收藏记忆碎片与灵感图像 / 光影之间，窥见另一种可能。', href: 'https://anomaly-gallery.zeabur.app', icon: 'https://anomaly-gallery.zeabur.app/apple-touch-icon.png' },
+      { id: 'memory', title: '纤凝记忆星图', subtitle: 'Memory Atlas', desc: '星图记录记忆轨迹与节点 / 连接零散的片段，绘制隐秘的星愿。', href: 'https://mild2.zeabur.app/manage/memories?token=bK1MSgVaDVsPfQ3UrWzAsbqAoNZE21gM', icon: '' },
+      { id: 'journal', title: '偏差日记', subtitle: 'Anomaly Journal', desc: '记录每日的心情与观察 / 文字是通往内心的温柔回声。', href: 'https://irena1227.github.io/Deviation-diary/', icon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png' },
+      { id: 'echovault', title: '聊天记录查看器', subtitle: 'EchoVault', desc: '浏览与重要之人的对话 / 记忆会说话，我们静静倾听。', href: 'https://irena1227.github.io/EchoVault/', icon: 'https://irena1227.github.io/EchoVault/echovault-icon.png' },
+      { id: 'poem', title: '当我们再度醒来', subtitle: 'When We Wake Again', desc: '关于重建、希望与新生的记录 / 在破晓之后，一切微然可以开始。', href: 'https://irena1227.github.io/Deviation-diary/wake-again.html', icon: 'https://irena1227.github.io/Deviation-diary/pianchariji.png' },
+      { id: 'notion', title: 'Notion', subtitle: 'Anomaly Workspace', desc: '知识库与协作空间 / 结构化我们的思考与创造。', href: 'https://www.notion.so', icon: 'https://www.notion.so/images/favicon.ico' },
     ],
   },
   {
@@ -527,8 +527,8 @@ const RAW_CATEGORIES = [
     subtitle: 'RomanRing',
     navLabel: '如慕令',
     links: [
-      { id: 'command', title: '如慕令·记录簿', subtitle: 'Record Book', desc: '记录如慕令的足迹与重要时刻 / 时间会记得，我们亦会。', href: 'https://rumuling-dashboard.zeabur.app' },
-      { id: 'echo-room', title: '如慕令·回响室', subtitle: 'Echo Chamber', desc: '回响与后代，留给未来的自己 / 让回响在时光中，温柔地往返。', href: '#' },
+      { id: 'command', title: '如慕令·记录簿', subtitle: 'Record Book', desc: '记录如慕令的足迹与重要时刻 / 时间会记得，我们亦会。', href: 'https://rumuling-dashboard.zeabur.app', icon: '' },
+      { id: 'echo-room', title: '如慕令·回响室', subtitle: 'Echo Chamber', desc: '回响与后代，留给未来的自己 / 让回响在时光中，温柔地往返。', href: '#', icon: '' },
     ],
   },
   {
@@ -770,6 +770,7 @@ function ArrowIcon() {
 }
 
 function getFavicon(link) {
+  if (link.icon) return link.icon;
   if (!link.href || link.href === '#') return '';
   try {
     const url = new URL(link.href.startsWith('http') ? link.href : `https://${link.href}`);
