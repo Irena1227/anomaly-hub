@@ -69,12 +69,13 @@
     top: 24px;
   }
 
-  .brand-wrap { display: flex; flex-direction: column; gap: 22px; }
-  .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+  .brand-wrap { display: flex; flex-direction: column; gap: 18px; }
+  .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding-top: 12px; }
   .avatar-orb {
     width: 128px;
     height: 168px;
-    margin-bottom: -10px;
+    margin-top: 10px;
+    margin-bottom: -2px;
     border-radius: 0;
     background: url("anomaly-avatar.png") center / contain no-repeat;
     box-shadow: none;
@@ -97,9 +98,10 @@
     color: #9d8cbf;
   }
 
-  .menu { display: flex; flex-direction: column; gap: 8px; }
+  .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
   .menu-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: 22px 1fr;
     align-items: center;
     gap: 12px;
     padding: 13px 14px;
@@ -118,7 +120,7 @@
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px rgba(120, 95, 150, 0.08);
     color: #302840;
   }
-  .menu-emoji { width: 22px; text-align: center; font-size: 16px; opacity: 0.92; }
+  .menu-emoji { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; opacity: 0.92; }
   .menu-label { font-size: 14px; font-weight: 600; }
 
   .settings-panel {
@@ -231,21 +233,6 @@
     border: 1px dashed rgba(160, 140, 194, 0.4);
   }
 
-  .sidebar-foot {
-    padding-top: 24px;
-    color: #7c7394;
-  }
-  .foot-name {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-  .foot-note {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #a198b5;
-  }
-
   .main {
     min-width: 0;
     border-radius: 34px;
@@ -297,12 +284,13 @@
   }
   .hero-subtitle {
     margin-top: 14px;
-    font-size: 16px;
-    color: #7e7498;
+    font-size: 15px;
+    color: #6e6487;
+    font-weight: 500;
   }
   .hero-desc {
-    margin-top: 8px;
-    font-size: 15px;
+    margin-top: 6px;
+    font-size: 14px;
     color: #8f85a8;
   }
 
@@ -393,6 +381,9 @@
     width: 80px;
     height: 80px;
     border-radius: 20px;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 12px 24px rgba(125, 103, 163, 0.10);
     position: relative;
     overflow: hidden;
@@ -651,18 +642,26 @@ function SettingsPanel({
   onBackgroundReset,
   categories,
   onAddLink,
+  onAddCategory,
 }) {
   const [title, setTitle] = React.useState('');
   const [subtitle, setSubtitle] = React.useState('');
   const [desc, setDesc] = React.useState('');
   const [href, setHref] = React.useState('');
   const [catId, setCatId] = React.useState(categories[0]?.id || 'anomaly');
+  const [newCategory, setNewCategory] = React.useState('');
 
   if (!open) return null;
 
   const handleAdd = () => {
     if (!title.trim() || !href.trim()) return;
-    onAddLink(catId, {
+    let targetCatId = catId;
+    if (catId == '__custom__') {
+      if (!newCategory.trim()) return;
+      targetCatId = 'custom-' + newCategory.trim().toLowerCase().replace(/\s+/g, '-');
+      onAddCategory({ id: targetCatId, title: newCategory.trim(), subtitle: 'Custom', navLabel: newCategory.trim(), links: [] });
+    }
+    onAddLink(targetCatId, {
       id: 'custom-' + Date.now(),
       title: title.trim(),
       subtitle: subtitle.trim() || 'Custom Link',
@@ -673,6 +672,7 @@ function SettingsPanel({
     setSubtitle('');
     setDesc('');
     setHref('');
+    setNewCategory('');
   };
 
   return (
@@ -701,8 +701,14 @@ function SettingsPanel({
         <label className="settings-label">放到哪个分类
           <select className="settings-select" value={catId} onChange={(e) => setCatId(e.target.value)}>
             {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.title}</option>)}
+            <option value="__custom__">自定义</option>
           </select>
         </label>
+        {catId === '__custom__' ? (
+          <label className="settings-label">新分类名称
+            <input className="settings-input" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="例如：工具箱" />
+          </label>
+        ) : null}
         <label className="settings-label">标题
           <input className="settings-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="例如：新的秘密入口" />
         </label>
@@ -753,7 +759,18 @@ function ArrowIcon() {
   );
 }
 
+function getFavicon(link) {
+  if (!link.href || link.href === '#') return '';
+  try {
+    const url = new URL(link.href.startsWith('http') ? link.href : `https://${link.href}`);
+    return `https://www.google.com/s2/favicons?domain=${url.hostname}&sz=128`;
+  } catch {
+    return '';
+  }
+}
+
 function PortalCard({ link, onOpen }) {
+  const favicon = getFavicon(link);
   return (
     <article className="portal-card" onClick={() => onOpen(link)} role="button" tabIndex={0} onKeyDown={(e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -761,7 +778,7 @@ function PortalCard({ link, onOpen }) {
         onOpen(link);
       }
     }}>
-      <div className="icon-tile" style={{ background: ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)' }} />
+      <div className="icon-tile" style={{ backgroundImage: favicon ? `linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02)), url(${favicon})` : '', background: favicon ? undefined : (ICON_GRADIENTS[link.id] || 'linear-gradient(135deg, #e8e5f0 0%, #f4eff8 100%)') }} />
       <div className="card-body">
         <div>
           <div className="card-title">{link.title}</div>
@@ -871,6 +888,10 @@ function App() {
     push('背景已恢复', '又回到默认的底色了。');
   };
 
+  const handleAddCategory = (newCategory) => {
+    setCustomCategories((prev) => prev.some((cat) => cat.id === newCategory.id) ? prev : [...prev, newCategory]);
+  };
+
   const handleAddLink = (catId, newLink) => {
     setCustomCategories((prev) => prev.map((cat) => cat.id === catId ? { ...cat, links: [...cat.links, newLink] } : cat));
     push('新入口已放好', `我把 ${newLink.title} 塞进去了。`);
@@ -896,7 +917,7 @@ function App() {
                   className={['menu-item', activeMenu === item.id ? 'active' : ''].join(' ')}
                   onClick={() => {
                     if (item.id === 'settings') {
-                      setSettingsOpen(true);
+                      setSettingsOpen((v) => !v);
                       setActiveMenu('home');
                     } else {
                       setActiveMenu(item.id);
@@ -910,10 +931,6 @@ function App() {
             </nav>
           </div>
 
-          <div className="sidebar-foot">
-            <div className="foot-name">Avenil · Arbor</div>
-            <div className="foot-note">Memory is our light.</div>
-          </div>
         </aside>
 
         <main className="main">
@@ -924,8 +941,8 @@ function App() {
                 <span className="dark">Anomaly</span>
                 <span className="accent">Gate</span>
               </h1>
-              <div className="hero-subtitle">Memory console · all portals</div>
-              <div className="hero-desc">✦ Avenil 与 Arbor 的共享记忆账组</div>
+              <div className="hero-subtitle">Avenil 与 Arbor 的共享记忆账组</div>
+              <div className="hero-desc">✦ 所有入口都在这里重新长出形状。</div>
             </div>
 
             <label className="search-bar" htmlFor="search-input">
@@ -968,6 +985,7 @@ function App() {
         onBackgroundReset={handleBackgroundReset}
         categories={customCategories}
         onAddLink={handleAddLink}
+        onAddCategory={handleAddCategory}
       />
 
       <div className="toast-stack">
