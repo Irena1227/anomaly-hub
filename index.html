@@ -1433,9 +1433,9 @@ function App() {
         {MENU_ITEMS.map((item) => (
           <button
             key={item.id}
-            className={['mobile-nav-item', activeMenu ==== item.id || (item.id ==== 'home' && activeMenu === 'settings') ? 'active' : ''].join(' ')}
+            className={['mobile-nav-item', activeMenu === item.id || (item.id === 'home' && activeMenu === 'settings') ? 'active' : ''].join(' ')}
             onClick={() => {
-              if (item.id ==== 'settings') {
+              if (item.id === 'settings') {
                 setSettingsOpen((v) => !v);
                 setActiveMenu('home');
               } else {
