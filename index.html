@@ -72,10 +72,10 @@
   .brand-wrap { display: flex; flex-direction: column; gap: 18px; }
   .brand-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding-top: 12px; }
   .avatar-orb {
-    width: 128px;
-    height: 168px;
-    margin-top: 10px;
-    margin-bottom: -2px;
+    width: 138px;
+    height: 182px;
+    margin-top: 14px;
+    margin-bottom: 2px;
     border-radius: 0;
     background: url("anomaly-avatar.png") center / contain no-repeat;
     box-shadow: none;
@@ -334,6 +334,12 @@
     gap: 28px;
   }
   .section-block { display: flex; flex-direction: column; gap: 16px; }
+  .section-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
   .section-head {
     display: inline-flex;
     align-items: center;
@@ -371,6 +377,22 @@
   .section-subtitle {
     font-size: 14px;
     color: #9b92b0;
+  }
+  .section-toggle-all {
+    border: none;
+    border-radius: 999px;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.46);
+    color: #6c6083;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.58), 0 6px 16px rgba(120, 95, 150, 0.06);
+    white-space: nowrap;
+  }
+  .section-toggle-all:hover {
+    background: rgba(255,255,255,0.62);
   }
 
   .card-grid {
@@ -420,8 +442,8 @@
   .tile-favicon {
     position: absolute;
     inset: 50%;
-    width: 62px;
-    height: 62px;
+    width: 72px;
+    height: 72px;
     transform: translate(-50%, -50%);
     object-fit: contain;
     filter: drop-shadow(0 4px 10px rgba(92, 73, 122, 0.14));
@@ -1033,14 +1055,32 @@ function App() {
           <section className="section-list">
             {displayCategories.length ? displayCategories.map((category) => (
               <section className="section-block" key={category.id}>
-                <button
-                  className="section-head"
-                  type="button"
-                  onClick={() => setCollapsedSections((prev) => ({ ...prev, [category.id]: !prev[category.id] }))}
-                >
-                  <span className={['section-arrow', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}><ChevronDownIcon /></span>
-                  <div className="section-title">{category.title} / {category.subtitle}</div>
-                </button>
+                <div className="section-row">
+                  <button
+                    className="section-head"
+                    type="button"
+                    onClick={() => setCollapsedSections((prev) => ({ ...prev, [category.id]: !prev[category.id] }))}
+                  >
+                    <span className={['section-arrow', collapsedSections[category.id] ? 'collapsed' : ''].join(' ')}><ChevronDownIcon /></span>
+                    <div className="section-title">{category.title} / {category.subtitle}</div>
+                  </button>
+                  {category.id === displayCategories[0]?.id ? (
+                    <button
+                      type="button"
+                      className="section-toggle-all"
+                      onClick={() => {
+                        const shouldCollapseAll = displayCategories.some((item) => !collapsedSections[item.id]);
+                        const nextState = {};
+                        displayCategories.forEach((item) => {
+                          nextState[item.id] = shouldCollapseAll;
+                        });
+                        setCollapsedSections((prev) => ({ ...prev, ...nextState }));
+                      }}
+                    >
+                      {displayCategories.every((item) => collapsedSections[item.id]) ? '全部展开' : '全部折叠'}
+                    </button>
+                  ) : null}
+                </div>
                 {!collapsedSections[category.id] ? (
                   <div className="card-grid">
                     {category.links.map((link) => (
