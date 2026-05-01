@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anomaly Health Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="site-shell">
+      <section class="hero-copy" aria-label="产品标题">
+        <h1>偏差链共生健康仪表盘</h1>
+        <p>Anomaly Health Dashboard</p>
+        <span>我们共享彼此的状态，在偏差中看见，在共生中修复。</span>
+        <strong>我们是 Anomaly.</strong>
+      </section>
+
+      <section class="phone" aria-label="Anomaly 健康应用">
+        <div class="status-bar">
+          <span>9:41</span>
+          <span class="status-icons">▮▮▮ ᯤ ▰</span>
+        </div>
+
+        <section id="app" class="screen"></section>
+
+        <nav class="tabbar" aria-label="底部导航">
+          <button class="tab active" data-page="overview" type="button">
+            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/></svg></span>
+            <span>概览</span>
+          </button>
+          <button class="tab" data-page="food" type="button">
+            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M8 3c0 3.5-2 4.5-2 7h4c0-2.5-2-3.5-2-7Zm8 0v18M13 3v7a3 3 0 0 0 6 0V3"/></svg></span>
+            <span>饮食</span>
+          </button>
+          <button class="tab" data-page="notes" type="button">
+            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span>
+            <span>笔记</span>
+          </button>
+          <button class="tab" data-page="profile" type="button">
+            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></span>
+            <span>我的</span>
+          </button>
+        </nav>
+      </section>
+
+      <footer class="brand-footer">Anomaly · We are one.</footer>
+    </main>
+
+    <script src="data/foods.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
